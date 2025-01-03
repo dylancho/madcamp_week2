@@ -2,6 +2,7 @@ import { css } from "@emotion/css";
 import { Component } from "solid-js";
 import { Color } from "../property/Color";
 import { Size } from "../property/Size";
+import { accountType, dataSys } from "../systems/Data";
 
 const TextboxStyle = css({
     // flex
@@ -20,11 +21,12 @@ const TextboxStyle = css({
     borderRadius: Size.radius.m,
 })
 
-const Textbox: Component<{message: string}> = ({message}) => {
+const AccountTextbox: Component<{message: string, field: keyof accountType }> = ({message, field}) => {
     return (
         <input class={TextboxStyle}
-               placeholder={message}/>
+               placeholder={message}
+               oninput={(e) => dataSys.setCurCreatingAccount(field, e.currentTarget.value)}/>
     )
 }
 
-export default Textbox;
+export default AccountTextbox;

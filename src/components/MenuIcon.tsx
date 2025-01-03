@@ -1,7 +1,5 @@
 import { css } from "@emotion/css";
-import { Component, For, onMount } from "solid-js";
-import { Size } from "../property/Size";
-import { Color } from "../property/Color";
+import { Component } from "solid-js";
 import { menuNavigatorSys } from "../systems/MenuNavigator";
 
 const MenuIconStyle = css({

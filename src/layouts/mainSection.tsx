@@ -1,6 +1,6 @@
 import { css } from "@emotion/css";
 import { Component } from "solid-js";
-import { links } from "../property/Link";
+import { dataSys } from "../systems/Data";
 
 const MainSectionStyle = css({
     // flex
@@ -33,6 +33,7 @@ const MainSection: Component = () => {
     return (
         <div class={MainSectionStyle}>
             <h1>Main Title</h1>
+            {dataSys.getUserList()}
         </div>
     )
 }

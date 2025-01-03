@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { Component, For, onMount } from "solid-js";
+import { Component, For } from "solid-js";
 import { Size } from "../property/Size";
 import { Color } from "../property/Color";
 import MenuIcon from "./MenuIcon";

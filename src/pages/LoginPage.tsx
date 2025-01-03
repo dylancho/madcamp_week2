@@ -36,9 +36,9 @@ const LoginPage: Component = () => {
         <div class={LoginPageStyle}>
             <p>로그인</p>
             <p>이메일</p>
-            <Textbox message={"something@mail.com"}></Textbox>
+            <Textbox message={"something@mail.com"} field="email"></Textbox>
             <p>비밀번호</p>
-            <Textbox message={"비밀번호"}></Textbox>
+            <Textbox message={"비밀번호"} field="passward"></Textbox>
 
             <button class={buttonStyle}
                     onClick={() => window.location.href = links.localhost + "/signin"}>
