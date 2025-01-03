@@ -35,8 +35,8 @@ const LoginPage: Component = () => {
     return (
         <div class={LoginPageStyle}>
             <p>로그인</p>
-            <p>아이디</p>
-            <Textbox message={"아이디"}></Textbox>
+            <p>이메일</p>
+            <Textbox message={"something@mail.com"}></Textbox>
             <p>비밀번호</p>
             <Textbox message={"비밀번호"}></Textbox>
 
