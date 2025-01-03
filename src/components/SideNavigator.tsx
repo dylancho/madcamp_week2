@@ -22,7 +22,7 @@ const SideNavigatorStyle = css({
 const menus = {
     "LogedOut": ["login", "help", "setting"],
     "LogedIn": ["myContent", "help", "setting", "logout"],
-    "Playing": ["quit", "myContent", "help", "setting", "logout"]
+    "Playing": ["quit", "mycontent", "help", "setting", "logout"]
 }
 
 const SideNavigator: Component<{state: stateType}> = ({state}) => {
