@@ -16,7 +16,11 @@
     "vite-plugin-solid": "^2.11.0"
   },
   "dependencies": {
+    "@emotion/css": "^11.13.5",
+    "@solidjs/meta": "^0.29.4",
+    "@solidjs/router": "^0.15.2",
     "babel-preset-solid": "^1.9.3",
+    "emotion": "^11.0.0",
     "solid-js": "^1.9.3"
   }
 }
