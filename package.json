@@ -11,12 +11,14 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "prisma": "^6.1.0",
     "typescript": "^5.7.2",
     "vite": "^6.0.0",
     "vite-plugin-solid": "^2.11.0"
   },
   "dependencies": {
     "@emotion/css": "^11.13.5",
+    "@prisma/client": "^6.1.0",
     "@solidjs/meta": "^0.29.4",
     "@solidjs/router": "^0.15.2",
     "babel-preset-solid": "^1.9.3",
