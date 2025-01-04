@@ -1,8 +1,14 @@
-import { Component } from "solid-js";
-import { createSignal, onMount } from "solid-js";
+import {
+  Component,
+  createSignal,
+  onMount,
+  onCleanup,
+  createEffect,
+} from "solid-js";
 
-const [x, setX] = createSignal(10); // Horizontal position
-const [y, setY] = createSignal(50); // Vertical position
+const [x, setX] = createSignal(0); // Horizontal position
+const [y, setY] = createSignal(0); // Vertical position
+const [isSuccess, setIsSuccess] = createSignal(false);
 const [isJumping, setIsJumping] = createSignal(false); // Prevent mid-air jumps
 const [velocityX, setVelocityX] = createSignal(0); // Horizontal velocity
 const [velocityY, setVelocityY] = createSignal(0); // Vertical velocity
@@ -16,14 +22,12 @@ const leftWall = 10;
 const rightWall = 160;
 const speed = 0.6;
 const pressedKeys: Record<string, boolean> = {}; // Track pressed keys
+let start = { x: 0, y: 0 };
+let end = { x: 0, y: 0 };
 
 // Obstacles: Array of rectangular clusters of squares
-const obstacles = [
-  { x: 30, y: 65, width: 5, height: 5 }, // Example obstacle 1
-  { x: 40, y: 60, width: 5, height: 5 }, // Example obstacle 2
-  { x: 40, y: 65, width: 5, height: 5 },
-  { x: 100, y: 0, width: 5, height: 5 },
-];
+type Obstacle = { x: number; y: number; width: number; height: number };
+const [obstacles, setObstacles] = createSignal<Obstacle[]>([]);
 
 // Jump logic for 2D mode
 function jump() {
@@ -87,7 +91,7 @@ function checkCollision() {
   const charTop = y() + 5;
   const charBottom = y(); // Character height (subtract height since bottom is smaller in coordinate space)
 
-  for (const obstacle of obstacles) {
+  for (const obstacle of obstacles()) {
     const obsLeft = obstacle.x;
     const obsRight = obstacle.x + obstacle.width;
     const obsTop = obstacle.y + obstacle.height;
@@ -101,8 +105,20 @@ function checkCollision() {
       charBottom < obsTop // Character's bottom edge passes obstacle's top edge
     ) {
       setDeathCnt(deathCnt() + 1);
-      return true; // Collision detected
+      setX(start.x); // Reset to start
+      setY(start.y);
+      return false; // Collision detected
     }
+  }
+
+  if (
+    charRight > end.x &&
+    charLeft < end.x + 5 &&
+    charTop > end.y &&
+    charBottom < end.y + 5
+  ) {
+    setIsSuccess(true);
+    return true;
   }
 
   return false; // No collision
@@ -152,20 +168,58 @@ function updatePosition() {
 }
 
 // PlayPage Component
-const PlayPage: Component = () => {
-    onMount(() => {
-      window.addEventListener("keydown", handleKeyDown);
-      window.addEventListener("keyup", handleKeyUp);
-      updatePosition(); // Start game loop
-  
-      return () => {
-        window.removeEventListener("keydown", handleKeyDown);
-        window.removeEventListener("keyup", handleKeyUp);
-      };
+const PlayPage: Component<{
+  grid: number[];
+  closePopup: () => void;
+  enableSave: () => void;
+}> = (props) => {
+
+  createEffect(() => {
+    if (isSuccess()) {
+      setIsSuccess(false);
+      props.closePopup(); // Close the popup
+      props.enableSave(); // Enable the Save button
+    }
+  });
+
+  onMount(() => {
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+    const parsedObstacles: Obstacle[] = [];
+    props.grid.forEach((cell, index) => {
+      const col = index % 30;
+      const row = Math.floor(index / 30);
+
+      if (cell === 1) {
+        parsedObstacles.push({
+          x: col * 5,
+          y: 70 - row * 5,
+          width: 5,
+          height: 5,
+        });
+      } else if (cell === 2) {
+        start = { x: col * 5, y: 70 - row * 5 };
+        setX(start.x);
+        setY(start.y);
+      } else if (cell === 3) {
+        end = { x: col * 5, y: 70 - row * 5 };
+      }
     });
+
+    setObstacles(parsedObstacles);
+    updatePosition(); // Start game loop
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  });
+
   
-    return (
-      <>
+
+  return (
+    <>
+      <div>
         <div
           style={{
             position: "relative",
@@ -194,32 +248,46 @@ const PlayPage: Component = () => {
             }}
           >
             {/* Obstacles */}
-            {obstacles.map((obstacle) => (
-              <div
-                style={{
-                  position: "absolute",
-                  left: `${obstacle.x}vh`, 
-                  bottom: `${obstacle.y}vh`,
-                  width: `${obstacle.width}vh`,
-                  height: `${obstacle.height}vh`,
-                  background: "green",
-                }}
-              ></div>
-            ))}
-  
+            <div>
+              {obstacles().map((obs) => (
+                <div
+                  style={{
+                    position: "absolute",
+                    left: `${obs.x}vh`,
+                    bottom: `${obs.y}vh`,
+                    width: `${obs.width}vh`,
+                    height: `${obs.height}vh`,
+                    background: "green",
+                  }}
+                ></div>
+              ))}
+            </div>
+
+            {/* Endpoint */}
+            <div
+              style={{
+                position: "absolute",
+                left: `${end.x}vh`,
+                bottom: `${end.y}vh`,
+                width: "5vh",
+                height: "5vh",
+                background: "yellow",
+              }}
+            ></div>
+
             {/* Character */}
             <div
               style={{
                 position: "absolute",
-                left: `${x()}vh`, 
-                bottom: `${y()}vh`, 
+                left: `${x()}vh`,
+                bottom: `${y()}vh`,
                 width: "5vh",
                 height: "5vh",
                 background: "red",
               }}
             ></div>
           </div>
-  
+
           {/* Mode Indicator */}
           <div
             style={{
@@ -237,8 +305,9 @@ const PlayPage: Component = () => {
             {"You died " + deathCnt() + " times"}
           </div>
         </div>
-      </>
-    );
-  };
-  
-  export default PlayPage;
+      </div>
+    </>
+  );
+};
+
+export default PlayPage;
