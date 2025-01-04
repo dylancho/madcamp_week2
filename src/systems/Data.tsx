@@ -2,6 +2,7 @@ import { createResource } from "solid-js";
 import { links } from "../property/Link"
 import { JsonValue } from "@prisma/client/runtime/library";
 import { createStore, SetStoreFunction } from "solid-js/store";
+import { menuNavigatorSys } from "./MenuNavigator";
 
 export interface accountType {
     email: string;
@@ -46,7 +47,6 @@ class DataSys {
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(this.curCreatingAccount)
         });
-        window.location.href = links.localhost + "/"
     }
 
     getUser = async (email: string, passward: string) => {
@@ -56,27 +56,6 @@ class DataSys {
             body: JSON.stringify({email, passward})
         });
         return response.json()
-    }
-
-    varifyEmail = async () => {
-        const {email, passward, name} = this.curCreatingAccount;
-        if (!email || !passward || !name) {
-            console.log("insufficient information");
-            window.location.href = links.localhost + "/signin"
-        }
-
-        const foundUser = await fetch(links.serverAddress + '/getUserById', {
-            method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({email: this.curCreatingAccount.email})
-        })
-        console.log(foundUser)
-        if (foundUser != null) {
-            console.log("email already exist! :", this.curCreatingAccount.email);
-            window.location.href = links.localhost + "/signin"
-        } else {
-            this.addUser();
-        }
     }
 
     getUserList = () => {
@@ -91,16 +70,46 @@ class DataSys {
         )
     }
 
+    // Signin function
+    addSignedUser = async () => {
+        if (!(await this.varifyInputs())) {
+            console.log("insufficient information");
+            window.location.href = links.localhost + "/signin"
+        }
+
+        const foundUser = await fetch(links.serverAddress + '/getUserById', {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({email: this.curCreatingAccount.email})
+        })
+        
+        if (foundUser != null) {
+            console.log("email already exist! :", this.curCreatingAccount.email);
+            window.location.href = links.localhost + "/signin"
+        } else {
+            this.addUser();
+            menuNavigatorSys.setCurState("LogedIn");
+            window.location.href = links.localhost + "/"
+        }
+    }
+
+    // Login function
     getUserLogedin = async () => {
         const foundUser = await this.getUser(this.curCreatingAccount.email, this.curCreatingAccount.passward);
         
         if (foundUser != null) {
             console.log("login success");
+            menuNavigatorSys.setCurState("LogedIn");
             window.location.href = links.localhost + "/"
         } else {
             console.log("login failed");
             window.location.href = links.localhost + "/login"
         }
+    }
+
+    varifyInputs = () => {
+        const {email, passward, name} = this.curCreatingAccount;
+        return !email || !passward || !name
     }
 }
 

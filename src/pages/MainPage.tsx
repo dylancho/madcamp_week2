@@ -18,8 +18,8 @@ const MainPageStyle = css({
 const MainPage: Component = () => {
     return (
         <div class={MainPageStyle}>
-            <MainSection></MainSection>
-            <SideNavigator state="LogedOut"></SideNavigator>
+            <MainSection/>
+            <SideNavigator/>
         </div>
     );
 }

@@ -1,10 +1,9 @@
 import { css } from "@emotion/css";
-import { Component, For } from "solid-js";
+import { Component, For, onMount } from "solid-js";
 import { Size } from "../property/Size";
 import { Color } from "../property/Color";
 import MenuIcon from "./MenuIcon";
-
-type stateType = "LogedOut" | "LogedIn" | "Playing";
+import { menuNavigatorSys, stateType } from "../systems/MenuNavigator";
 
 const SideNavigatorStyle = css({
     // flex
@@ -21,15 +20,15 @@ const SideNavigatorStyle = css({
 
 const menus = {
     "LogedOut": ["login", "help", "setting"],
-    "LogedIn": ["myContent", "help", "setting", "logout"],
+    "LogedIn": ["mycontent", "help", "setting", "logout"],
     "Playing": ["quit", "mycontent", "help", "setting", "logout"]
 }
 
-const SideNavigator: Component<{state: stateType}> = ({state}) => {
+const SideNavigator: Component = () => {
 
     return (
         <div class={SideNavigatorStyle}>
-            <For each={menus[state]}>{(menu, _) =>
+            <For each={menus[menuNavigatorSys.curState()]}>{(menu, _) =>
                 <MenuIcon menu={menu}></MenuIcon>
             }</For>
         </div>
