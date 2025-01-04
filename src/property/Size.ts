@@ -7,11 +7,21 @@
     // other
 
   export const Size = {
-    button: {
-        testW: 500,
-        testH: 200,
-    },
     navigator: {
         width: 100
+    },
+
+    radius: {
+        m: 5,
+    },
+
+    space: {
+        s: 8,
+        m: 16,
+    },
+
+    input: {
+        width: 100,
+        height: 40,
     }
   }

@@ -3,7 +3,7 @@ import { css } from "@emotion/css"
 import SideNavigator from "../components/SideNavigator";
 import MainSection from "../layouts/mainSection";
 
-const mainStyle = css({
+const MainPageStyle = css({
     // flex
     display: 'flex',
     flexDirection: 'row',
@@ -17,7 +17,7 @@ const mainStyle = css({
 
 const MainPage: Component = () => {
     return (
-        <div class={mainStyle}>
+        <div class={MainPageStyle}>
             <MainSection></MainSection>
             <SideNavigator state="LogedOut"></SideNavigator>
         </div>

@@ -1,6 +1,21 @@
 import { Component } from "solid-js";
 import { links } from "../property/Link";
 import { css } from "@emotion/css";
+import Textbox from "../components/Textbox";
+
+const SigninPageStyle = css({
+    // flex
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    // position
+    // scale
+    // text
+    // color
+    // space
+    // other
+})
 
 const buttonStyle = css({
     // flex
@@ -18,13 +33,20 @@ const buttonStyle = css({
 
 const SigninPage: Component = () => {
     return (
-        <>
-        <p>This is signin page.</p>
-        <button class={buttonStyle}
-                onClick={() => window.location.href = links.localhost + "/"}>
-                    go to main page
-        </button>
-        </>
+        <div class={SigninPageStyle}>
+            <p>회원가입</p>
+            <p>아이디</p>
+            <Textbox message={"아이디"}></Textbox>
+            <p>비밀번호</p>
+            <Textbox message={"비밀번호"}></Textbox>
+            <p>이름</p>
+            <Textbox message={"이름"}></Textbox>
+
+            <button class={buttonStyle}
+                    onClick={() => window.location.href = links.localhost + "/"}>
+                        Sign in
+            </button>
+        </div>
     );
 }
 

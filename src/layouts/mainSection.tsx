@@ -33,10 +33,6 @@ const MainSection: Component = () => {
     return (
         <div class={MainSectionStyle}>
             <h1>Main Title</h1>
-            <button class={buttonStyle}
-                    onClick={() => window.location.href = links.localhost + "/login"}>
-                        go to login page
-            </button>
         </div>
     )
 }
