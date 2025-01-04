@@ -1,0 +1,15 @@
+import { css } from "@emotion/css";
+import { Component, JSXElement } from "solid-js";
+import { Size } from "../property/Size";
+import { ButtonStyle } from "../property/commonStyles";
+
+const MakeProjectButtonStyle = css({
+    justifySelf: 'end',
+    width: Size.ui.makeProjectW,
+})
+
+export const MakeProjectButton: Component<{ children: JSXElement}> = ({children}) => {
+    return (
+        <button class={`${ButtonStyle} ${MakeProjectButtonStyle}`}>{children}</button>
+    )
+}

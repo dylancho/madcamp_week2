@@ -1,4 +1,4 @@
-import { createResource } from "solid-js";
+import { Accessor, createResource, createSignal, Setter } from "solid-js";
 import { links } from "../property/Link"
 import { JsonValue } from "@prisma/client/runtime/library";
 import { createStore, SetStoreFunction } from "solid-js/store";
@@ -32,8 +32,12 @@ class DataSys {
     curCreatingAccount: accountType
     setCurCreatingAccount: SetStoreFunction<accountType>
 
+    numMaps: Accessor<number>
+    setNumMaps: Setter<number>
+
     constructor() {
-        ([this.curCreatingAccount, this.setCurCreatingAccount] = createStore<accountType>({email: "", name: "", passward: ""}))
+        ([this.curCreatingAccount, this.setCurCreatingAccount] = createStore<accountType>({email: "", name: "", passward: ""})),
+        ([this.numMaps, this.setNumMaps] = createSignal<number>(15))
     }
 
     fetchUsers = async () => {
