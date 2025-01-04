@@ -22,7 +22,7 @@ app.get("/users", async (req, res) => {
 app.post("/addUser", async (req, res) => {
   try {
     const { email, name, passward }: accountType = req.body;
-
+    console.log(email, name, passward);
     const newUser = await prisma.user.create({
       data: {
         email,
@@ -33,7 +33,24 @@ app.post("/addUser", async (req, res) => {
 
     res.status(201).json({ message: "User added successfully :" + newUser.name, user: newUser });
   } catch (error) {
-    res.status(500).json({ message: "[Error] An error occurred whild adding the user"})
+    res.status(500).json({ message: "[Error] An error occurred while adding the user"});
+  }
+})
+
+app.post("/getUser",  async (req, res) => {
+  try {
+    const { email, passward } = req.body;
+
+    const foundUser = await prisma.user.findFirst({
+      where: {
+        email: email,
+        passward: passward
+      },
+    })
+    
+    res.status(200).json(foundUser);
+  } catch (error) {
+    res.status(500).json({ message: "[Error] An error occurred while looking for the user"});
   }
 })
 

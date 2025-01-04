@@ -1,7 +1,8 @@
-import { Component } from "solid-js";
+import { Component, onMount } from "solid-js";
 import { links } from "../property/Link";
 import { css } from "@emotion/css";
 import Textbox from "../components/Textbox";
+import { dataSys } from "../systems/Data";
 
 const LoginPageStyle = css({
     // flex
@@ -32,6 +33,14 @@ const buttonStyle = css({
 })
 
 const LoginPage: Component = () => {
+    onMount(() => {
+        dataSys.setCurCreatingAccount({
+            "email": "",
+            "passward": "",
+            "name": ""
+        });
+    })
+
     return (
         <div class={LoginPageStyle}>
             <p>로그인</p>
@@ -41,7 +50,7 @@ const LoginPage: Component = () => {
             <Textbox message={"비밀번호"} field="passward"></Textbox>
 
             <button class={buttonStyle}
-                    onClick={() => window.location.href = links.localhost + "/signin"}>
+                    onClick={dataSys.getUserLogedin}>
                         Log in
             </button>
             <button class={buttonStyle}

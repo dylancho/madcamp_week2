@@ -37,7 +37,7 @@ class DataSys {
 
     fetchUsers = async () => {
         const response = await fetch(links.serverAddress + '/users');
-        return response.json();
+        return response.json()
     };
 
     addUser = async () => {
@@ -47,7 +47,15 @@ class DataSys {
             body: JSON.stringify(this.curCreatingAccount)
         });
         window.location.href = links.localhost + "/"
-        console.log("addUser() called")
+    }
+
+    getUser = async (email: string, passward: string) => {
+        const response = await fetch(links.serverAddress + '/getUser', {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({email, passward})
+        });
+        return response.json()
     }
 
     getUserList = () => {
@@ -60,6 +68,24 @@ class DataSys {
                 ))}
             </ul>
         )
+    }
+    // foundUser: {
+    //     name: string;
+    //     id: number;
+    //     email: string;
+    //     passward: string;
+    //     createdAt: Date;
+    // }
+    getUserLogedin = async () => {
+        const foundUser = await this.getUser(this.curCreatingAccount.email, this.curCreatingAccount.passward);
+        console.log("foundUser:", foundUser);
+        if (foundUser != null) {
+            console.log("login success");
+            window.location.href = links.localhost + "/"
+        } else {
+            console.log("login failed");
+            window.location.href = links.localhost + "/login"
+        }
     }
 }
 
