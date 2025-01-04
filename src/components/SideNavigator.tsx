@@ -4,6 +4,7 @@ import { Size } from "../property/Size";
 import { Color } from "../property/Color";
 import MenuIcon from "./MenuIcon";
 import { menuNavigatorSys, menuType, stateType } from "../systems/MenuNavigator";
+import { links } from "../property/Link";
 
 const SideNavigatorStyle = css({
     // flex
@@ -33,6 +34,7 @@ const LogoStyle = css({
     // space
     margin: 20,
     // other
+    cursor: "pointer",
 })
 
 const menus: Record<stateType, menuType[]> = {
@@ -45,7 +47,7 @@ const SideNavigator: Component = () => {
 
     return (
         <div class={SideNavigatorStyle}>
-            <div class={LogoStyle}></div>
+            <div class={LogoStyle} onClick={() => window.location.href = links.localhost + "/"}></div>
             <For each={menus[menuNavigatorSys.curState()]}>{(menu, _) =>
                 <MenuIcon menu={menu}></MenuIcon>
             }</For>

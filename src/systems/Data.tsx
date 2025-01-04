@@ -85,7 +85,7 @@ class DataSys {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({email: this.curCreatingAccount.email})
-        })
+        }).then(res => res.json())
         console.log(foundUser)
         if (foundUser != null) {
             console.log("email already exist! :", this.curCreatingAccount.email);

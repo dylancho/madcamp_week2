@@ -90,3 +90,5 @@ const LoginPage: Component = () => {
         </div>
     );
 }
+
+export default LoginPage
