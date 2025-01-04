@@ -5,11 +5,10 @@ import { ButtonStyle } from "../property/commonStyles";
 
 const MakeProjectButtonStyle = css({
     justifySelf: 'end',
-    width: Size.ui.makeProjectW,
 })
 
 export const MakeProjectButton: Component<{ children: JSXElement}> = ({children}) => {
     return (
-        <button class={`${ButtonStyle} ${MakeProjectButtonStyle}`}>{children}</button>
+        <button class={`${ButtonStyle(Size.ui.makeProjectW)} ${MakeProjectButtonStyle}`}>{children}</button>
     )
 }

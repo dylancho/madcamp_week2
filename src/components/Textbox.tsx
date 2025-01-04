@@ -12,7 +12,6 @@ const searchTextboxStyle = css({
     alignItems: 'center',
     // position
     // scale
-    width: Size.ui.searchW,
     // text
     // color
     // space
@@ -34,7 +33,7 @@ const inputStyle = css({
 
 export const AccountTextbox: Component<{message: string, field: keyof accountType}> = ({message, field}) => {
     return (
-        <input class={TextboxStyle}
+        <input class={TextboxStyle()}
                placeholder={message}
                oninput={(e) => dataSys.setCurCreatingAccount(field, e.currentTarget.value)}/>
     )
@@ -42,7 +41,7 @@ export const AccountTextbox: Component<{message: string, field: keyof accountTyp
 
 export const SearchTextbox: Component<{message: string}> = ({message}) => {
     return (
-        <div class={`${TextboxStyle} ${searchTextboxStyle}`}>
+        <div class={`${TextboxStyle(Size.ui.searchW)} ${searchTextboxStyle}`}>
             <svg xmlns="http://www.w3.org/2000/svg"
                     height="24"
                     width="24"

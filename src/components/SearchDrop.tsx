@@ -10,7 +10,6 @@ const SearchDropStyle = css({
     alignItems: 'center',
     // position
     // scale
-    width: Size.ui.dropW,
     // text
     color: Color.grayDark,
     // color
@@ -21,6 +20,6 @@ const SearchDropStyle = css({
 
 export const SearchDrop: Component = () => {
     return (
-        <div class={`${TextboxStyle} ${SearchDropStyle}`}>최신순</div>
+        <div class={`${TextboxStyle(Size.ui.dropW)} ${SearchDropStyle}`}>최신순</div>
     )
 }

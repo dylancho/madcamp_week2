@@ -76,7 +76,7 @@ class DataSys {
 
     // Signin function
     addSignedUser = async () => {
-        if (!(await this.varifyInputs())) {
+        if (await this.varifyInputs()) {
             console.log("insufficient information");
             window.location.href = links.localhost + "/signin"
         }
@@ -86,7 +86,7 @@ class DataSys {
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({email: this.curCreatingAccount.email})
         })
-        
+        console.log(foundUser)
         if (foundUser != null) {
             console.log("email already exist! :", this.curCreatingAccount.email);
             window.location.href = links.localhost + "/signin"

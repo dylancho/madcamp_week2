@@ -17,7 +17,7 @@ const SideNavigatorStyle = css({
     // color
     backgroundColor: Color.grayLight,
     // space
-    gap: Size.space.xl,
+    gap: Size.space.l,
     // other
 })
 

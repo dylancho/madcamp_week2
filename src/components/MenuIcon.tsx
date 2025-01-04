@@ -24,7 +24,7 @@ const MenuIconStyle = css({
         // position
         // scale
         // text
-        fontSize: Size.font.s,
+        fontSize: Size.font.xs,
         fontWeight: "bold",
         // color
         fontcolor: Color.grayDark,

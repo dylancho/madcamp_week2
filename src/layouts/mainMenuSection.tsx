@@ -1,9 +1,11 @@
 import { css } from "@emotion/css";
-import { Component } from "solid-js";
+import { Component, Show } from "solid-js";
 import { Size } from "../property/Size";
 import { SearchTextbox } from "../components/Textbox";
 import { SearchDrop } from "../components/SearchDrop";
 import { MakeProjectButton } from "../components/Button";
+import { dataSys } from "../systems/Data";
+import { menuNavigatorSys } from "../systems/MenuNavigator";
 
 const MainMenuSectionStyle = css({
     // flex
@@ -23,7 +25,9 @@ const MainMenuSection: Component = () => {
                 <SearchTextbox message={"검색"}></SearchTextbox>
                 <SearchDrop></SearchDrop>
             </div>
-            <MakeProjectButton>프로젝트 만들기</MakeProjectButton>
+            <Show when={menuNavigatorSys.curState() == "LogedIn"}>
+                <MakeProjectButton>프로젝트 만들기</MakeProjectButton>
+            </Show>
         </div>
     )
 }

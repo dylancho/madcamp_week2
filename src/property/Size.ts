@@ -29,8 +29,9 @@
         searchW: 280,
         makeProjectW: 270,
         mapDisplayW: 360,
+        LoginW: 380,
         textboxH: 40,
-        buttonH: 60,
+        buttonH: 52,
     },
 
     // 1rem = 16px
@@ -38,6 +39,7 @@
         xs: '1rem',  // 16
         s: '1.1rem', // 17.6
         m: '1.25rem', // 20
-        main: '4rem',
+        login: '3rem', // 48
+        main: '3.5rem', // 56
     }
   }
