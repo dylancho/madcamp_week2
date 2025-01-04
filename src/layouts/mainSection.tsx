@@ -1,39 +1,61 @@
 import { css } from "@emotion/css";
 import { Component } from "solid-js";
+import { Size } from "../property/Size";
+import MainMenuSection from "./mainMenuSection";
 import { dataSys } from "../systems/Data";
+import { Color } from "../property/Color";
+import { MapDisplay } from "../components/MapDisplay";
 
 const MainSectionStyle = css({
     // flex
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'stretch',
     flex: 1,
     // position
     // scale
-    height: "100vh",
     // text
     // color
     // space
+    margin: Size.space.edge,
     // other
 })
 
-const buttonStyle = css({
+const MainTitleStyle = css({
     // flex
     // position
     // scale
     // text
+    fontSize: Size.font.main,
+    fontWeight: "bold",
     // color
-    backgroundColor: 'aqua',
     // space
     // other
     ":hover": {
         filter: 'brightness(1.12)',
+        cursor: 'default'
     }
+})
+
+const NumMapLabelStyle = css({
+    // flex
+    // position
+    // scale
+    // text
+    // color
+    color: Color.grayDark,
+    // space
+    // other
 })
 
 
 const MainSection: Component = () => {
     return (
         <div class={MainSectionStyle}>
-            <h1>Main Title</h1>
-            {dataSys.getUserList()}
+            <div class={MainTitleStyle}>메인 타이틀</div>
+            <MainMenuSection></MainMenuSection>
+            <div class={NumMapLabelStyle}>전체 {dataSys.numMaps()}개</div>
+            <MapDisplay></MapDisplay>
         </div>
     )
 }

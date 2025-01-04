@@ -2,6 +2,7 @@ import { Accessor, createEffect, createSignal, Setter } from "solid-js";
 import { links } from "../property/Link"
 
 export type stateType = "LogedOut" | "LogedIn" | "Playing";
+export type menuType = "login" | "logout" | "help" | "setting" | "quit" | "mycontent";
 
 class MenuNavigatorSys {
     curState: Accessor<stateType>

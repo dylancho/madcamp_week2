@@ -1,6 +1,6 @@
 import { Component, onMount } from "solid-js";
 import { css } from "@emotion/css";
-import Textbox from "../components/Textbox";
+import { AccountTextbox } from "../components/Textbox";
 import { dataSys } from "../systems/Data";
 import { links } from "../property/Link";
 
@@ -36,13 +36,13 @@ const LoginPage: Component = () => {
     });
   });
 
-  return (
-    <div class={LoginPageStyle}>
-      <p>로그인</p>
-      <p>이메일</p>
-      <Textbox message={"something@mail.com"} field="email"></Textbox>
-      <p>비밀번호</p>
-      <Textbox message={"비밀번호"} field="passward"></Textbox>
+    return (
+        <div class={LoginPageStyle}>
+            <p>로그인</p>
+            <p>이메일</p>
+            <AccountTextbox message={"something@mail.com"} field="email"></AccountTextbox>
+            <p>비밀번호</p>
+            <AccountTextbox message={"비밀번호"} field="passward"></AccountTextbox>
 
       <button class={buttonStyle} onClick={dataSys.getUserLogedin}>
         Log in
