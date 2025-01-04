@@ -54,6 +54,22 @@ app.post("/getUser",  async (req, res) => {
   }
 })
 
+app.post("/getUserByID",  async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const foundUser = await prisma.user.findFirst({
+      where: {
+        email: email
+      },
+    })
+    
+    res.status(200).json(foundUser);
+  } catch (error) {
+    res.status(500).json({ message: "[Error] An error occurred while checking the email"});
+  }
+})
+
 app.listen(4242, () => {
   console.log("Server running on http://localhost:4242");
 });

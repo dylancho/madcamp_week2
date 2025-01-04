@@ -58,6 +58,27 @@ class DataSys {
         return response.json()
     }
 
+    varifyEmail = async () => {
+        const {email, passward, name} = this.curCreatingAccount;
+        if (!email || !passward || !name) {
+            console.log("insufficient information");
+            window.location.href = links.localhost + "/signin"
+        }
+
+        const foundUser = await fetch(links.serverAddress + '/getUserById', {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({email: this.curCreatingAccount.email})
+        })
+        console.log(foundUser)
+        if (foundUser != null) {
+            console.log("email already exist! :", this.curCreatingAccount.email);
+            window.location.href = links.localhost + "/signin"
+        } else {
+            this.addUser();
+        }
+    }
+
     getUserList = () => {
         const [users] = createResource(this.fetchUsers);
 
@@ -69,16 +90,10 @@ class DataSys {
             </ul>
         )
     }
-    // foundUser: {
-    //     name: string;
-    //     id: number;
-    //     email: string;
-    //     passward: string;
-    //     createdAt: Date;
-    // }
+
     getUserLogedin = async () => {
         const foundUser = await this.getUser(this.curCreatingAccount.email, this.curCreatingAccount.passward);
-        console.log("foundUser:", foundUser);
+        
         if (foundUser != null) {
             console.log("login success");
             window.location.href = links.localhost + "/"

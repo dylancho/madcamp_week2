@@ -51,7 +51,7 @@ const SigninPage: Component = () => {
             <Textbox message={"이름"} field="name"></Textbox>
 
             <button class={buttonStyle}
-                    onClick={() => dataSys.addUser()}>
+                    onClick={() => dataSys.varifyEmail()}>
                         Sign in
             </button>
         </div>
