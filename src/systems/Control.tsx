@@ -1,17 +1,19 @@
 import { Accessor, createSignal, Setter } from "solid-js";
 
 class ControlSys {
-    isDialogOpen: Accessor<boolean>
-    setIsDialogOpen: Setter<boolean>
+    isMapDialogOpen: Accessor<boolean>
+    setIsMapDialogOpen: Setter<boolean>
+    
+    isHelpDialogOpen: Accessor<boolean>
+    setIsHelpDialogOpen: Setter<boolean>
+
+    isSettingDialogOpen: Accessor<boolean>
+    setIsSettingDialogOpen: Setter<boolean>
 
     constructor() {
-        ([this.isDialogOpen, this.setIsDialogOpen] = createSignal<boolean>(false))
-    }
-
-    handleKeyDown = (e: KeyboardEvent) => {
-        if (e.key === "Escape") {
-            this.setIsDialogOpen(false);
-        }
+        ([this.isMapDialogOpen, this.setIsMapDialogOpen] = createSignal<boolean>(false)),
+        ([this.isHelpDialogOpen, this.setIsHelpDialogOpen] = createSignal<boolean>(false)),
+        ([this.isSettingDialogOpen, this.setIsSettingDialogOpen] = createSignal<boolean>(false))
     }
 }
 

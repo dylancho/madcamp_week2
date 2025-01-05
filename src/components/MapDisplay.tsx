@@ -3,6 +3,7 @@ import { Component, For } from "solid-js";
 import { Size } from "../property/Size";
 import { dataSys } from "../systems/Data";
 import { Color } from "../property/Color";
+import { controlSys } from "../systems/Control";
 
 const MapDisplayStyle = (height: number) => { return css({
     // grid
@@ -47,7 +48,7 @@ export const MapDisplay: Component<{height: number, amount: number}> = ({height,
     return (
         <div class={MapDisplayStyle(height)}>
             <For each={Array.from({length: amount})}>{(_, i) =>
-                <div class={MapCardStyle}></div>
+                <div class={MapCardStyle} onclick={() => controlSys.setIsMapDialogOpen(true)}></div>
             }</For>
         </div>
     )

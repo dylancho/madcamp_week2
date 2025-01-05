@@ -1,6 +1,7 @@
 import { Accessor, createEffect, createSignal, Setter } from "solid-js";
 import { links } from "../property/Link"
 import { dataSys } from "./Data";
+import { controlSys } from "./Control";
 
 export type stateType = "LogedOut" | "LogedIn" | "Playing";
 export type menuType = "login" | "logout" | "help" | "setting" | "quit" | "mycontent";
@@ -40,6 +41,13 @@ class MenuNavigatorSys {
                 break;
             case "mycontent":
                 window.location.href = links.localhost + '/mycontent'
+                break;
+            case "help":
+                controlSys.setIsHelpDialogOpen(true);
+                break;
+            case "setting":
+                controlSys.setIsSettingDialogOpen(true);
+                break;
             default:
                 break;
         }

@@ -39,6 +39,7 @@ export const ButtonStyle = (wid?: number | string) => { return css({
     // other
     border: 'none',
     borderRadius: Size.radius.m,
+    cursor: 'pointer',
     ":hover": {
       filter: 'brightness(1.12)',
     },
