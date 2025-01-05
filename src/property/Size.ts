@@ -13,6 +13,7 @@
 
     radius: {
         m: 5,
+        l: 10,
     },
 
     space: {
@@ -26,6 +27,7 @@
 
     ui: {
         dropW: 140,
+        profileW: 160,
         searchW: 280,
         makeProjectW: 270,
         mapDisplayW: 360,
@@ -39,6 +41,7 @@
         xs: '1rem',  // 16
         s: '1.1rem', // 17.6
         m: '1.25rem', // 20
+        l: '1.75rem', // 28
         login: '3rem', // 48
         main: '3.5rem', // 56
     }

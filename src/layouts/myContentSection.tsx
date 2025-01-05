@@ -5,8 +5,9 @@ import MainMenuSection from "./mainMenuSection";
 import { dataSys } from "../systems/Data";
 import { Color } from "../property/Color";
 import { MapDisplay } from "../components/MapDisplay";
+import MyContentProfileSection from "./myContentProfileSection";
 
-const MainSectionStyle = css({
+const MyContentSectionStyle = css({
     // flex
     display: 'flex',
     flexDirection: 'column',
@@ -21,13 +22,12 @@ const MainSectionStyle = css({
     // other
 })
 
-const MainTitleStyle = css({
+const MyContentTitleStyle = css({
     // flex
     // position
     // scale
     // text
-    fontSize: Size.font.main,
-    fontWeight: "bold",
+    fontSize: Size.font.l,
     // color
     // space
     // other
@@ -48,17 +48,16 @@ const NumMapLabelStyle = css({
     // other
 })
 
-
-const MainSection: Component = () => {
+const MyContentSection: Component = () => {
     return (
-        <div class={MainSectionStyle}>
-            <div class={MainTitleStyle}>메인 타이틀</div>
-            <MainMenuSection></MainMenuSection>
-            <div class={NumMapLabelStyle}>전체 {dataSys.numMaps()}개</div>
-            <MapDisplay height={64 + 75 + Size.space.edge}
-                        amount={dataSys.numMaps()}></MapDisplay>
+        <div class={MyContentSectionStyle}>
+            <MyContentProfileSection />
+            <MainMenuSection />
+            <div class={NumMapLabelStyle}>전체 {dataSys.numMyMaps()}개</div>
+            <MapDisplay height={64 + Size.ui.profileW + Size.space.l + Size.space.edge}
+                        amount={dataSys.numMyMaps()}></MapDisplay>
         </div>
     )
 }
 
-export default MainSection;
+export default MyContentSection;

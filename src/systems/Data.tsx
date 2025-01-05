@@ -1,4 +1,4 @@
-import { Accessor, createResource, createSignal, Setter } from "solid-js";
+import { Accessor, createEffect, createResource, createSignal, onMount, Setter } from "solid-js";
 import { links } from "../property/Link"
 import { JsonValue } from "@prisma/client/runtime/library";
 import { createStore, SetStoreFunction } from "solid-js/store";
@@ -32,12 +32,52 @@ class DataSys {
     curCreatingAccount: accountType
     setCurCreatingAccount: SetStoreFunction<accountType>
 
+    curUser: userType
+    setCurUser: SetStoreFunction<userType>
+
     numMaps: Accessor<number>
     setNumMaps: Setter<number>
 
+    numMyMaps: Accessor<number>
+    setNumMyMaps: Setter<number>
+
+
     constructor() {
-        ([this.curCreatingAccount, this.setCurCreatingAccount] = createStore<accountType>({email: "", name: "", passward: ""})),
-        ([this.numMaps, this.setNumMaps] = createSignal<number>(15))
+        ([this.curCreatingAccount, this.setCurCreatingAccount] = createStore<accountType>({
+            email: "",
+            name: "",
+            passward: ""
+        })),
+        ([this.curUser, this.setCurUser] = createStore<userType>({
+            id: -1,
+            email: '',
+            name: '',
+            passward: '',
+            createdAt: new Date(),
+            map: [],
+          })),
+        ([this.numMaps, this.setNumMaps] = createSignal<number>(15)),
+        ([this.numMyMaps, this.setNumMyMaps] = createSignal<number>(4)),
+
+        onMount(() => {
+            const savedUser = localStorage.getItem("curUser");
+            const initialUser: userType = savedUser
+              ? this.deserializeUser(JSON.parse(savedUser))
+              : {
+                  id: -1,
+                  email: '',
+                  name: '',
+                  passward: '',
+                  createdAt: new Date(),
+                  map: [],
+                };
+        
+            [this.curUser, this.setCurUser] = createStore<userType>(initialUser);
+        })
+        // Update localStorage whenever curState changes
+        createEffect(() => {
+            localStorage.setItem("curUser", JSON.stringify(this.curUser)); // ?
+        });
     }
 
     fetchUsers = async () => {
@@ -102,8 +142,14 @@ class DataSys {
         const foundUser = await this.getUser(this.curCreatingAccount.email, this.curCreatingAccount.passward);
         
         if (foundUser != null) {
-            console.log("login success");
+            console.log("login success:", foundUser);
             menuNavigatorSys.setCurState("LogedIn");
+            this.setCurUser("id", foundUser.id);
+            this.setCurUser("email", foundUser.email);
+            this.setCurUser("passward", foundUser.passward);
+            this.setCurUser("name", foundUser.name);
+            this.setCurUser("createdAt", foundUser.createdAt);
+            console.log("info stored:", this.curUser.name);
             window.location.href = links.localhost + "/"
         } else {
             console.log("login failed");
@@ -111,9 +157,18 @@ class DataSys {
         }
     }
 
+    // ## utility functions ## //
     varifyInputs = () => {
         const {email, passward, name} = this.curCreatingAccount;
         return !email || !passward || !name
+    }
+
+    // Function to deserialize user data
+    deserializeUser(data: any): userType {
+        return {
+        ...data,
+        createdAt: new Date(data.createdAt), // Convert string back to Date
+        };
     }
 }
 

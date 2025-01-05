@@ -20,6 +20,7 @@ const SideNavigatorStyle = css({
     // space
     gap: Size.space.l,
     // other
+    boxShadow: '0 -2 14px 14px rgba(0, 0, 0, 0.1)',
 })
 
 const LogoStyle = css({

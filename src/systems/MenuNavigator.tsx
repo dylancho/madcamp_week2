@@ -1,5 +1,6 @@
 import { Accessor, createEffect, createSignal, Setter } from "solid-js";
 import { links } from "../property/Link"
+import { dataSys } from "./Data";
 
 export type stateType = "LogedOut" | "LogedIn" | "Playing";
 export type menuType = "login" | "logout" | "help" | "setting" | "quit" | "mycontent";
@@ -25,8 +26,20 @@ class MenuNavigatorSys {
                 break;
             case "logout":
                 this.setCurState("LogedOut");
+                dataSys.setCurUser(
+                    {
+                        id: -1,
+                        email: '',
+                        name: '',
+                        passward: '',
+                        createdAt: new Date(),
+                        map: [],
+                    }
+                );
                 window.location.href = links.localhost + "/"
                 break;
+            case "mycontent":
+                window.location.href = links.localhost + '/mycontent'
             default:
                 break;
         }

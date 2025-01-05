@@ -1,10 +1,8 @@
 import { css } from "@emotion/css";
 import { Component, Show } from "solid-js";
-import { Size } from "../property/Size";
 import { SearchTextbox } from "../components/Textbox";
 import { SearchDrop } from "../components/SearchDrop";
 import { MakeProjectButton } from "../components/Button";
-import { dataSys } from "../systems/Data";
 import { menuNavigatorSys } from "../systems/MenuNavigator";
 
 const MainMenuSectionStyle = css({
