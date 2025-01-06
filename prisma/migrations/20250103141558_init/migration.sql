@@ -16,7 +16,7 @@ CREATE TABLE "Map" (
     "creatorId" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "rating" DOUBLE PRECISION NOT NULL DEFAULT 0.0,
-    "config" INTEGER[]
+    "config" INTEGER[],
 
     CONSTRAINT "Map_pkey" PRIMARY KEY ("id")
 );
