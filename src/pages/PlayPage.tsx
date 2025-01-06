@@ -24,10 +24,16 @@ const speed = 0.6;
 const pressedKeys: Record<string, boolean> = {}; // Track pressed keys
 let start = { x: 0, y: 0 };
 let end = { x: 0, y: 0 };
+let animationFrameId: number;
+let previousX = 0; // Track the previous horizontal position
+let previousY = 0;
 
 // Obstacles: Array of rectangular clusters of squares
 type Obstacle = { x: number; y: number; width: number; height: number };
 const [obstacles, setObstacles] = createSignal<Obstacle[]>([]);
+
+type Floor = { x: number; y: number; width: number; height: number };
+const [floors, setFloors] = createSignal<Floor[]>([]);
 
 // Jump logic for 2D mode
 function jump() {
@@ -107,7 +113,42 @@ function checkCollision() {
       setDeathCnt(deathCnt() + 1);
       setX(start.x); // Reset to start
       setY(start.y);
-      return false; // Collision detected
+    }
+  }
+
+  for (const floor of floors()) {
+    const floorLeft = floor.x;
+    const floorRight = floor.x + floor.width;
+    const floorTop = floor.y + floor.height;
+    const floorBottom = floor.y;
+
+    // Check if character intersects with the floor block
+    if (
+      charRight > floorLeft &&
+      charLeft < floorRight &&
+      charTop > floorBottom &&
+      charBottom < floorTop
+    ) {
+      // Restore the previous position to avoid overlap
+      setX(previousX);
+      setY(previousY);
+
+      // Stop movement in the appropriate direction
+      if (velocityY() > 0) {
+        // Stop downward movement
+        setVelocityY(0);
+        setIsJumping(false);
+      } else if (velocityY() < 0) {
+        // Stop upward movement
+        setVelocityY(0);
+      }
+
+      if (velocityX() !== 0) {
+        // Stop horizontal movement
+        setVelocityX(0);
+      }
+
+      return;
     }
   }
 
@@ -118,14 +159,14 @@ function checkCollision() {
     charBottom < end.y + 5
   ) {
     setIsSuccess(true);
-    return true;
   }
-
-  return false; // No collision
 }
 
 // Game loop to update position
 function updatePosition() {
+  previousX = x();
+  previousY = y();
+
   setX((x) => x + velocityX()); // Update horizontal position
   setY((y) => y + velocityY()); // Update vertical position
 
@@ -158,13 +199,11 @@ function updatePosition() {
   }
 
   // Check collision with obstacles
-  if (checkCollision()) {
-    // Reset character position on collision
-    setX(10);
-    setY(50);
-  }
+  checkCollision();
 
-  requestAnimationFrame(updatePosition); // Loop the update
+  if (animationFrameId !== 0) {
+    animationFrameId = requestAnimationFrame(updatePosition);
+  } // Loop the update
 }
 
 // PlayPage Component
@@ -173,7 +212,6 @@ const PlayPage: Component<{
   closePopup: () => void;
   enableSave: () => void;
 }> = (props) => {
-
   createEffect(() => {
     if (isSuccess()) {
       setIsSuccess(false);
@@ -186,6 +224,7 @@ const PlayPage: Component<{
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
     const parsedObstacles: Obstacle[] = [];
+    const parsedFloors: Floor[] = [];
     props.grid.forEach((cell, index) => {
       const col = index % 30;
       const row = Math.floor(index / 30);
@@ -203,11 +242,20 @@ const PlayPage: Component<{
         setY(start.y);
       } else if (cell === 3) {
         end = { x: col * 5, y: 70 - row * 5 };
+      } else if (cell === 4) {
+        parsedFloors.push({
+          x: col * 5,
+          y: 70 - row * 5,
+          width: 5,
+          height: 5,
+        });
       }
     });
 
     setObstacles(parsedObstacles);
-    updatePosition(); // Start game loop
+    setFloors(parsedFloors);
+
+    animationFrameId = requestAnimationFrame(updatePosition);
 
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
@@ -215,7 +263,10 @@ const PlayPage: Component<{
     };
   });
 
-  
+  onCleanup(() => {
+    cancelAnimationFrame(animationFrameId);
+    animationFrameId = 0;
+  });
 
   return (
     <>
@@ -258,6 +309,22 @@ const PlayPage: Component<{
                     width: `${obs.width}vh`,
                     height: `${obs.height}vh`,
                     background: "green",
+                  }}
+                ></div>
+              ))}
+            </div>
+
+            {/* Floors */}
+            <div>
+              {floors().map((fls) => (
+                <div
+                  style={{
+                    position: "absolute",
+                    left: `${fls.x}vh`,
+                    bottom: `${fls.y}vh`,
+                    width: `${fls.width}vh`,
+                    height: `${fls.height}vh`,
+                    background: "orange",
                   }}
                 ></div>
               ))}

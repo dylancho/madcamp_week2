@@ -102,6 +102,10 @@ class DataSys {
         return response.json()
     }
 
+    getKakaoAuth = async () => {
+        await fetch(links.serverAddress + '/auth/kakao');
+    }
+
     getUserList = () => {
         const [users] = createResource(this.fetchUsers);
 

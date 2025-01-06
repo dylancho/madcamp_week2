@@ -51,7 +51,7 @@ const WorkplacePage: Component = () => {
   const enableSave = () => setIsSaveEnabled(true);
 
   const [grid, setGrid] = createSignal(Array(450).fill(0)); // 30x15 grid as a list
-  const [selectedType, setSelectedType] = createSignal<0 | 1 | 2 | 3 | -1>(0); // 0: empty, 1: obstacle, 2: start, 3: end, -1: eraser
+  const [selectedType, setSelectedType] = createSignal<0 | 1 | 2 | 3 | -1 | 4>(0); // 0: empty, 1: obstacle, 2: start, 3: end, -1: eraser
 
   const handleCellClick = (index: number) => {
     const newGrid = [...grid()];
@@ -105,6 +105,12 @@ const WorkplacePage: Component = () => {
             End
           </button>
           <button
+            class={`${selectedType() === 4 ? selectedStyle : ""}`}
+            onClick={() => setSelectedType(4)}
+          >
+            floor
+          </button>
+          <button
             class={`${selectedType() === -1 ? selectedStyle : ""}`}
             onClick={() => setSelectedType(-1)}
           >
@@ -140,11 +146,13 @@ const WorkplacePage: Component = () => {
               style={{
                 "background-color":
                   cell === 1
-                    ? "#000"
+                    ? "green"
                     : cell === 2
                     ? "#00ff00"
                     : cell === 3
                     ? "#ffff00"
+                    : cell === 4
+                    ? "#FFA500"
                     : "#fff",
                 border: "1px solid #ccc",
               }}
