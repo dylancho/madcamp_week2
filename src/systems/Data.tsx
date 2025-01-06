@@ -102,8 +102,9 @@ class DataSys {
         return response.json()
     }
 
-    getKakaoAuth = async () => {
-        await fetch(links.serverAddress + '/auth/kakao');
+    getKakaoUser = async () => {
+        const response = await fetch(links.serverAddress + '/auth/kakao');
+        return response.json()
     }
 
     getUserList = () => {
@@ -145,6 +146,26 @@ class DataSys {
     getUserLogedin = async () => {
         const foundUser = await this.getUser(this.curCreatingAccount.email, this.curCreatingAccount.passward);
         
+        if (foundUser != null) {
+            console.log("login success:", foundUser);
+            menuNavigatorSys.setCurState("LogedIn");
+            this.setCurUser("id", foundUser.id);
+            this.setCurUser("email", foundUser.email);
+            this.setCurUser("passward", foundUser.passward);
+            this.setCurUser("name", foundUser.name);
+            this.setCurUser("createdAt", foundUser.createdAt);
+            console.log("info stored:", this.curUser.name);
+            window.location.href = links.localhost + "/"
+        } else {
+            console.log("login failed");
+            window.location.href = links.localhost + "/login"
+        }
+    }
+
+    // Login function (kakao)
+    getKakaoUserLogedin = async () => {
+        const foundUser = await this.getKakaoUser();
+
         if (foundUser != null) {
             console.log("login success:", foundUser);
             menuNavigatorSys.setCurState("LogedIn");

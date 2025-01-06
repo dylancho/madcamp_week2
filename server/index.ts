@@ -137,7 +137,7 @@ app.get("/auth/kakao/callback", async (req, res) => {
       });
     }
 
-    res.status(200).json({ message: "Kakao Login successful", user });
+    res.status(200).json(user);
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error(
