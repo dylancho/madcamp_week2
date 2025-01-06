@@ -137,7 +137,7 @@ app.get("/auth/kakao/callback", async (req, res) => {
       });
     }
 
-    res.status(200).json(user);
+    res.redirect(`http://localhost:3000/`);
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error(

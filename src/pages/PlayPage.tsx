@@ -14,6 +14,7 @@ const [velocityX, setVelocityX] = createSignal(0); // Horizontal velocity
 const [velocityY, setVelocityY] = createSignal(0); // Vertical velocity
 const [is3DMode, setIs3DMode] = createSignal(false); // Mode toggle
 const [deathCnt, setDeathCnt] = createSignal(0);
+const [largestOverlap, setLargestOverlap] = createSignal(0);
 const gravity = 0.05; // Gravity strength for 2D mode
 const jumpStrength = 1; // Initial upward velocity
 const groundLevel = 10; // Ground level (y-coordinate)
@@ -25,8 +26,6 @@ const pressedKeys: Record<string, boolean> = {}; // Track pressed keys
 let start = { x: 0, y: 0 };
 let end = { x: 0, y: 0 };
 let animationFrameId: number;
-let previousX = 0; // Track the previous horizontal position
-let previousY = 0;
 
 // Obstacles: Array of rectangular clusters of squares
 type Obstacle = { x: number; y: number; width: number; height: number };
@@ -91,11 +90,11 @@ function handleKeyUp(e: KeyboardEvent) {
 }
 
 // Collision detection
-function checkCollision() {
+function checkCollisionObstacle() {
   const charLeft = x();
   const charRight = x() + 5; // Character width
-  const charTop = y() + 5;
-  const charBottom = y(); // Character height (subtract height since bottom is smaller in coordinate space)
+  const charTop = y() + 5; // Character top edge
+  const charBottom = y(); // Character bottom edge
 
   for (const obstacle of obstacles()) {
     const obsLeft = obstacle.x;
@@ -121,35 +120,6 @@ function checkCollision() {
     const floorRight = floor.x + floor.width;
     const floorTop = floor.y + floor.height;
     const floorBottom = floor.y;
-
-    // Check if character intersects with the floor block
-    if (
-      charRight > floorLeft &&
-      charLeft < floorRight &&
-      charTop > floorBottom &&
-      charBottom < floorTop
-    ) {
-      // Restore the previous position to avoid overlap
-      setX(previousX);
-      setY(previousY);
-
-      // Stop movement in the appropriate direction
-      if (velocityY() > 0) {
-        // Stop downward movement
-        setVelocityY(0);
-        setIsJumping(false);
-      } else if (velocityY() < 0) {
-        // Stop upward movement
-        setVelocityY(0);
-      }
-
-      if (velocityX() !== 0) {
-        // Stop horizontal movement
-        setVelocityX(0);
-      }
-
-      return;
-    }
   }
 
   if (
@@ -162,11 +132,67 @@ function checkCollision() {
   }
 }
 
+function checkCollisionFloor() {
+  const charLeft = x();
+  const charRight = x() + 5; // Character width
+  const charTop = y() + 5; // Character top edge
+  const charBottom = y(); // Character bottom edge
+
+  let correctedX = x();
+  let correctedY = y();
+  let isColliding = false;
+
+  for (const floor of floors()) {
+    const floorLeft = floor.x;
+    const floorRight = floor.x + floor.width;
+    const floorTop = floor.y + floor.height;
+    const floorBottom = floor.y;
+
+    // Check if character intersects with the floor
+    if (
+      charRight > floorLeft &&
+      charLeft < floorRight &&
+      charTop > floorBottom &&
+      charBottom < floorTop
+    ) {
+      isColliding = true;
+
+      // Calculate overlaps on all sides // Overlap with the left side
+      const overlapX = Math.min(charTop - floorBottom, floorTop - charBottom);
+      const overlapY = Math.min(charRight - floorLeft, floorRight - charLeft);
+
+      // Find the largest overlap to resolve the collision
+      setLargestOverlap(Math.max(overlapX, overlapY));
+
+      if (largestOverlap() === overlapX) {
+        if (charRight < floorRight) {
+          correctedX = floorLeft - 5;
+        } else {
+          correctedX = floorRight;
+        }
+        setVelocityX(0);
+      } else if (largestOverlap() === overlapY) {
+        if (charTop < floorTop) {
+          correctedY = floorBottom - 5;
+        } else {
+          correctedY = floorTop;
+        }
+        setVelocityY(0);
+      }
+    }
+  }
+
+  // Update character position if there's a collision
+  if (isColliding) {
+    setX(correctedX);
+    setY(correctedY);
+  }
+
+  return isColliding;
+}
+
 // Game loop to update position
 function updatePosition() {
-  previousX = x();
-  previousY = y();
-
   setX((x) => x + velocityX()); // Update horizontal position
   setY((y) => y + velocityY()); // Update vertical position
 
@@ -199,7 +225,8 @@ function updatePosition() {
   }
 
   // Check collision with obstacles
-  checkCollision();
+  checkCollisionObstacle();
+  checkCollisionFloor();
 
   if (animationFrameId !== 0) {
     animationFrameId = requestAnimationFrame(updatePosition);
