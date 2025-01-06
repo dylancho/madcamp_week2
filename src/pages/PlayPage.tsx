@@ -176,6 +176,7 @@ function checkCollisionFloor() {
           correctedY = floorBottom - 5;
         } else {
           correctedY = floorTop;
+          setIsJumping(false);
         }
         setVelocityY(0);
       }

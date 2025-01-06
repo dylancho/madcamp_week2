@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
-import { accountType } from "../src/systems/Data";
+import { accountType, mapType } from "../src/systems/Data";
 import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
@@ -38,12 +38,10 @@ app.post("/addUser", async (req, res) => {
       },
     });
 
-    res
-      .status(201)
-      .json({
-        message: "User added successfully :" + newUser.name,
-        user: newUser,
-      });
+    res.status(201).json({
+      message: "User added successfully :" + newUser.name,
+      user: newUser,
+    });
   } catch (error) {
     res
       .status(500)
@@ -63,11 +61,35 @@ app.post("/getUser", async (req, res) => {
 
     res.status(200).json(foundUser);
   } catch (error) {
+    res.status(500).json({
+      message: "[Error] An error occurred while looking for the user",
+    });
+  }
+});
+
+app.post("/save/maps", async (req, res) => {
+  try {
+    const { name, creatorId, config } = req.body;
+    console.log(config);
+
+    // Create a new map in the database
+    const newMap = await prisma.map.create({
+      data: {
+        name,
+        creatorId,
+        config,
+      },
+    });
+
+    res.status(201).json({
+      message: "Map added successfully: " + newMap.name,
+      map: newMap,
+    });
+  } catch (error) {
+    console.error("[Error] Failed to add map:", error);
     res
       .status(500)
-      .json({
-        message: "[Error] An error occurred while looking for the user",
-      });
+      .json({ message: "[Error] An error occurred while adding the map" });
   }
 });
 
@@ -121,7 +143,9 @@ app.get("/auth/kakao/callback", async (req, res) => {
       });
     }
 
-    const redirectUrl = `${CLIENT_DOMAIN}/?email=${encodeURIComponent(user.email)}`;
+    const redirectUrl = `${CLIENT_DOMAIN}/?email=${encodeURIComponent(
+      user.email
+    )}`;
     res.redirect(redirectUrl);
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -129,12 +153,10 @@ app.get("/auth/kakao/callback", async (req, res) => {
         "Axios error during Kakao Login:",
         error.response?.data || error.message
       );
-      res
-        .status(500)
-        .json({
-          message: "Kakao Login failed 1",
-          error: error.response?.data || error.message,
-        });
+      res.status(500).json({
+        message: "Kakao Login failed 1",
+        error: error.response?.data || error.message,
+      });
     } else if (error instanceof Error) {
       console.error("Generic error during Kakao Login:", error.message);
       res

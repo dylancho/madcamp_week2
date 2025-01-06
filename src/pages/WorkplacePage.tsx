@@ -2,6 +2,7 @@ import { Component, createEffect, createSignal } from "solid-js";
 import { css } from "@emotion/css";
 import SideNavigator from "../components/SideNavigator";
 import PlayPage from "./PlayPage";
+import { dataSys } from "../systems/Data";
 
 const WorkplacePageStyle = css({
   display: "flex",
@@ -117,7 +118,7 @@ const WorkplacePage: Component = () => {
             Eraser
           </button>
           <button onClick={handlePlay}>Play</button>
-          <button disabled={!isSaveEnabled()}>Save</button>
+          <button disabled={!isSaveEnabled()} onClick={() => dataSys.postGrid(grid())}>Save</button>
           {showPlayPopup() && (
             <div
               style={{
