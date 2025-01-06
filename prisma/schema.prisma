@@ -29,5 +29,5 @@ model Map {
   creatorId Int
   createdAt DateTime @default(now())
   rating    Float    @default(0.0)
-  config    Json
+  config    Int[]
 }
