@@ -102,11 +102,6 @@ class DataSys {
         return response.json()
     }
 
-    getKakaoUser = async () => {
-        const response = await fetch(links.serverAddress + '/auth/kakao');
-        return response.json()
-    }
-
     getUserList = () => {
         const [users] = createResource(this.fetchUsers);
 
@@ -144,7 +139,7 @@ class DataSys {
 
     // Login function
     getUserLogedin = async () => {
-        const foundUser = await this.getUser(this.curCreatingAccount.email, this.curCreatingAccount.passward);
+        const foundUser = await this.getUser(this.curCreatingAccount.email);
         
         if (foundUser != null) {
             console.log("login success:", foundUser);
@@ -162,10 +157,16 @@ class DataSys {
         }
     }
 
-    // Login function (kakao)
-    getKakaoUserLogedin = async () => {
-        const foundUser = await this.getKakaoUser();
+    getKakaoUser = async () => {
+        window.location.href = "http://localhost:4242/auth/kakao";
+    }
 
+    getKakaoUserLogedIn = async () => {
+        const query = new URLSearchParams(window.location.search);
+        const email = query.get("email");
+
+        const foundUser = await this.getUser(email? email : "");
+        
         if (foundUser != null) {
             console.log("login success:", foundUser);
             menuNavigatorSys.setCurState("LogedIn");
@@ -175,10 +176,6 @@ class DataSys {
             this.setCurUser("name", foundUser.name);
             this.setCurUser("createdAt", foundUser.createdAt);
             console.log("info stored:", this.curUser.name);
-            window.location.href = links.localhost + "/"
-        } else {
-            console.log("login failed");
-            window.location.href = links.localhost + "/login"
         }
     }
 

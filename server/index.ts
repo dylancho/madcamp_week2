@@ -121,7 +121,8 @@ app.get("/auth/kakao/callback", async (req, res) => {
       });
     }
 
-    res.redirect(`http://localhost:3000/`);
+    const redirectUrl = `${CLIENT_DOMAIN}/?email=${encodeURIComponent(user.email)}`;
+    res.redirect(redirectUrl);
   } catch (error) {
     if (axios.isAxiosError(error)) {
       console.error(
