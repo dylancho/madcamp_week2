@@ -1,9 +1,8 @@
-import { Component } from "solid-js";
+import { Component, createEffect } from "solid-js";
 import { css } from "@emotion/css"
 import SideNavigator from "../components/SideNavigator";
 import MainSection from "../layouts/mainSection";
-import { Dialog, HelpDialog, MapDialog, SettingDialog } from "../components/Dialog";
-import { controlSys } from "../systems/Control";
+import { dataSys } from "../systems/Data";
 
 const MainPageStyle = css({
     // flex
@@ -18,13 +17,12 @@ const MainPageStyle = css({
 })
 
 const MainPage: Component = () => {
+    createEffect(() => dataSys.getKakaoUserLogedIn())
+
     return (
         <div class={MainPageStyle}>
             <MainSection/>
             <SideNavigator/>
-            <MapDialog/>
-            <HelpDialog/>
-            <SettingDialog/>
         </div>
     );
 }

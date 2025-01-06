@@ -1,0 +1,20 @@
+[33m4ec4998[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{0}: reset: moving to HEAD
+[33m4ec4998[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{1}: commit: floor 구현
+[33mb7072fc[m HEAD@{2}: reset: moving to origin/main
+[33m2ea4a8a[m HEAD@{3}: commit: 카카오 로그인...?
+[33m21420d0[m HEAD@{4}: pull: Fast-forward
+[33m476a860[m HEAD@{5}: pull: Fast-forward
+[33m1018906[m HEAD@{6}: commit (merge): merge
+[33mc946f1f[m HEAD@{7}: commit: 카카오 로그인 준비? 워크플레이스 수정
+[33m682f486[m HEAD@{8}: pull: Fast-forward
+[33m4370663[m HEAD@{9}: pull: Fast-forward
+[33m201ce62[m HEAD@{10}: commit (merge): merge 함
+[33m79ea5d7[m HEAD@{11}: commit: fix px -> vh
+[33m884a873[m HEAD@{12}: commit: added obstycles
+[33ma4fc8ba[m HEAD@{13}: pull: Fast-forward
+[33m2b2a13e[m HEAD@{14}: pull: Fast-forward
+[33m3a157fb[m HEAD@{15}: checkout: moving from jump to main
+[33md197b0b[m[33m ([m[1;31morigin/jump[m[33m, [m[1;32mjump[m[33m)[m HEAD@{16}: commit (merge): 병합 완료
+[33m0e10228[m HEAD@{17}: commit: 기본적인 2D/3D 기능 구현
+[33m3a157fb[m HEAD@{18}: checkout: moving from main to jump
+[33m3a157fb[m HEAD@{19}: clone: from https://github.com/dylancho/madcamp_week2.git

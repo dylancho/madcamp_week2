@@ -9,6 +9,7 @@ dotenv.config();
 const app = express();
 const prisma = new PrismaClient();
 
+const CLIENT_DOMAIN = "http://localhost:3000";
 const KAKAO_CLIENT_ID = "5dc16f5630ecc658d6e41449c09125ac";
 const KAKAO_REDIRECT_URI = "http://localhost:4242/auth/kakao/callback";
 
@@ -52,12 +53,11 @@ app.post("/addUser", async (req, res) => {
 
 app.post("/getUser", async (req, res) => {
   try {
-    const { email, passward } = req.body;
+    const { email } = req.body;
 
     const foundUser = await prisma.user.findFirst({
       where: {
         email: email,
-        passward: passward,
       },
     });
 
@@ -71,24 +71,6 @@ app.post("/getUser", async (req, res) => {
   }
 });
 
-app.post("/getUserByID", async (req, res) => {
-  try {
-    const { email } = req.body;
-
-    const foundUser = await prisma.user.findFirst({
-      where: {
-        email: email,
-      },
-    });
-
-    res.status(200).json(foundUser);
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "[Error] An error occurred while checking the email" });
-  }
-});
-
 app.get("/auth/kakao", (req, res) => {
   const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_CLIENT_ID}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
   res.redirect(kakaoAuthUrl);
@@ -97,6 +79,7 @@ app.get("/auth/kakao", (req, res) => {
 app.get("/auth/kakao/callback", async (req, res) => {
   const { code } = req.query;
   try {
+    // 1. get the acess token
     const tokenResponse = await axios.post(
       "https://kauth.kakao.com/oauth/token",
       null,
@@ -113,6 +96,7 @@ app.get("/auth/kakao/callback", async (req, res) => {
 
     const { access_token } = tokenResponse.data;
 
+    // 2. get the user information
     const userInfoResponse = await axios.get(
       "https://kapi.kakao.com/v2/user/me",
       {
@@ -122,7 +106,7 @@ app.get("/auth/kakao/callback", async (req, res) => {
 
     const { id, kakao_account } = userInfoResponse.data;
 
-    // Check for existing user or create a new one
+    // 3. check for existing user or create a new one
     let user = await prisma.user.findFirst({
       where: { email: kakao_account.email },
     });
