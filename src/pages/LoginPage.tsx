@@ -72,12 +72,14 @@ const LoginPage: Component = () => {
 
             <button class={`${ButtonStyle(Size.ui.LoginW)} ${css({marginTop: Size.space.xl})}`}
                     onClick={dataSys.getUserLogedin}>
-                        로그인
+                로그인
             </button>
+            
             <button class={buttonStyle}
                     onClick={() => window.location.href = links.localhost + "/signin"}>
-                        회원가입
+                회원가입
             </button>
+
             {/* Kakao Login Button */}
             <button
                 class={kakaoButtonStyle}
