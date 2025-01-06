@@ -32,7 +32,7 @@ export interface mapType {
   createdAt: Date;
   creatorId: number;
   rating: number;
-  config: JsonValue;
+  config: number[];
 }
 
 class DataSys {
@@ -193,13 +193,14 @@ class DataSys {
     };
 
     try {
-      const response = await fetch(`${links.localhost}/save/maps`, {
+      const response = await fetch("http://localhost:4242/save/maps", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(mapData), // Properly stringify the mapData object
       });
+      console.log(JSON.stringify(mapData));
 
       if (!response.ok) {
         throw new Error("Failed to save map");

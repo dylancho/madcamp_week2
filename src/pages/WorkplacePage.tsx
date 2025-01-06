@@ -52,7 +52,9 @@ const WorkplacePage: Component = () => {
   const enableSave = () => setIsSaveEnabled(true);
 
   const [grid, setGrid] = createSignal(Array(450).fill(0)); // 30x15 grid as a list
-  const [selectedType, setSelectedType] = createSignal<0 | 1 | 2 | 3 | -1 | 4>(0); // 0: empty, 1: obstacle, 2: start, 3: end, -1: eraser
+  const [selectedType, setSelectedType] = createSignal<0 | 1 | 2 | 3 | -1 | 4>(
+    0
+  ); // 0: empty, 1: obstacle, 2: start, 3: end, -1: eraser
 
   const handleCellClick = (index: number) => {
     const newGrid = [...grid()];
@@ -118,7 +120,12 @@ const WorkplacePage: Component = () => {
             Eraser
           </button>
           <button onClick={handlePlay}>Play</button>
-          <button disabled={!isSaveEnabled()} onClick={() => dataSys.postGrid(grid())}>Save</button>
+          <button
+            disabled={!isSaveEnabled()}
+            onClick={() => dataSys.postGrid(grid())}
+          >
+            Save
+          </button>
           {showPlayPopup() && (
             <div
               style={{
@@ -130,7 +137,6 @@ const WorkplacePage: Component = () => {
               }}
             >
               <PlayPage
-              
                 grid={grid()}
                 closePopup={handleClosePopup}
                 enableSave={enableSave}
