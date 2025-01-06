@@ -14,6 +14,7 @@
     radius: {
         m: 5,
         l: 10,
+        kakao: 12,
     },
 
     space: {

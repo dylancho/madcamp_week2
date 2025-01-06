@@ -10,7 +10,7 @@ export const TextboxStyle = (wid: number | string = Size.ui.LoginW) => { return 
     width: wid,
     height: Size.ui.textboxH,
     // text
-    fontSize: '1.1rem',
+    fontSize: Size.font.xs,
     // color
     backgroundColor: 'white',
     // space

@@ -12,12 +12,6 @@ const LoginPageStyle = css({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    // position
-    // scale
-    // text
-    // color
-    // space
-    // other
 })
 
 const buttonStyle = css({
@@ -41,14 +35,31 @@ const buttonStyle = css({
 })
 
 const kakaoButtonStyle = css({
-    backgroundColor: Color.kakao,
-    color: "#000",
-    fontWeight: "bold",
-    padding: "10px 20px",
-    borderRadius: "5px",
-    border: "none",
+    // flex
+    // position
+    // scale
+    width: Size.ui.LoginW,
+    // text
+    // color
+    // space
+    // other
     cursor: "pointer",
-    marginTop: "10px",
+    ":hover": {
+        filter: 'brightness(1.02)',
+    }
+  });
+
+const LabelStyle = css({
+    // flex
+    // position
+    // scale
+    // text
+    // color
+    color: Color.gray,
+    // space
+    marginTop: Size.space.l,
+    marginBottom: 0,
+    // other
   });
 
 const LoginPage: Component = () => {
@@ -61,8 +72,15 @@ const LoginPage: Component = () => {
   });
 
     return (
-        <div class={LoginPageStyle}>
+        <div class={LoginPageStyle}> 
+
             <p class={LoginTitleStyle}>로그인</p>
+
+            <img src='/kakao_login_large_wide.png'
+                 class={kakaoButtonStyle}
+                 onClick={dataSys.getKakaoUser}/>
+
+            <p class={LabelStyle}>또는</p>
             
             <p class={LoginLabelStyle}>이메일</p>
             <AccountTextbox message={"something@mail.com"} field="email"></AccountTextbox>
@@ -77,11 +95,6 @@ const LoginPage: Component = () => {
             <button class={buttonStyle}
                     onClick={() => window.location.href = links.localhost + "/signin"}>
                 회원가입
-            </button>
-            {/* Kakao Login Button */}
-            <button class={kakaoButtonStyle}
-                    onClick={dataSys.getKakaoUser}>
-                Login with Kakao
             </button>
         </div>
     );
