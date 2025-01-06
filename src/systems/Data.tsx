@@ -93,17 +93,13 @@ class DataSys {
         });
     }
 
-    getUser = async (email: string, passward: string) => {
+    getUser = async (email: string) => {
         const response = await fetch(links.serverAddress + '/getUser', {
             method: "POST",
             headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({email, passward})
+            body: JSON.stringify({email})
         });
         return response.json()
-    }
-
-    getKakaoAuth = async () => {
-        await fetch(links.serverAddress + '/auth/kakao');
     }
 
     getUserList = () => {
@@ -125,7 +121,7 @@ class DataSys {
             window.location.href = links.localhost + "/signin"
         }
 
-        const foundUser = await fetch(links.serverAddress + '/getUserById', {
+        const foundUser = await fetch(links.serverAddress + '/getUser', {
             method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify({email: this.curCreatingAccount.email})
@@ -143,7 +139,7 @@ class DataSys {
 
     // Login function
     getUserLogedin = async () => {
-        const foundUser = await this.getUser(this.curCreatingAccount.email, this.curCreatingAccount.passward);
+        const foundUser = await this.getUser(this.curCreatingAccount.email);
         
         if (foundUser != null) {
             console.log("login success:", foundUser);
@@ -158,6 +154,28 @@ class DataSys {
         } else {
             console.log("login failed");
             window.location.href = links.localhost + "/login"
+        }
+    }
+
+    getKakaoUser = async () => {
+        window.location.href = "http://localhost:4242/auth/kakao";
+    }
+
+    getKakaoUserLogedIn = async () => {
+        const query = new URLSearchParams(window.location.search);
+        const email = query.get("email");
+
+        const foundUser = await this.getUser(email? email : "");
+        
+        if (foundUser != null) {
+            console.log("login success:", foundUser);
+            menuNavigatorSys.setCurState("LogedIn");
+            this.setCurUser("id", foundUser.id);
+            this.setCurUser("email", foundUser.email);
+            this.setCurUser("passward", foundUser.passward);
+            this.setCurUser("name", foundUser.name);
+            this.setCurUser("createdAt", foundUser.createdAt);
+            console.log("info stored:", this.curUser.name);
         }
     }
 

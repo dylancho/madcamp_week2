@@ -81,9 +81,7 @@ const LoginPage: Component = () => {
             {/* Kakao Login Button */}
             <button
                 class={kakaoButtonStyle}
-                onClick={() => {
-                window.location.href = "http://localhost:4242/auth/kakao";
-                }}
+                onClick={dataSys.getKakaoUser}
             >
                 Login with Kakao
             </button>
