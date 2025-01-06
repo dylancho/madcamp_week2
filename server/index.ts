@@ -26,6 +26,16 @@ app.get("/users", async (req, res) => {
   res.json(users);
 });
 
+app.get("/maps", async (req, res) => {
+  try {
+    const maps = await prisma.map.findMany();
+    res.json(maps);
+  } catch (error) {
+    console.error("Error fetching maps:", error);
+    res.status(500).json({ error: "Failed to fetch maps" });
+  }
+});
+
 app.post("/addUser", async (req, res) => {
   try {
     const { email, name, passward }: accountType = req.body;

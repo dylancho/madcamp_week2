@@ -185,6 +185,19 @@ class DataSys {
     }
   };
 
+  getMaps = async () => {
+    try {
+      const response = await fetch(links.serverAddress + "/maps");
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    } catch (error) {
+      console.error("Error fetching maps:", error);
+      return [];
+    }
+  };
+
   postGrid = async (grid: number[]) => {
     const mapData = {
       name: this.curUser.name, // Replace with the logged-in user's name
