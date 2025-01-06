@@ -28,17 +28,20 @@
     },
 
     ui: {
+        mapElementButtonW: 60,
         keySetBoxW: 72,
         dropW: 140,
         profileW: 160,
+        mapTestButtonW: 160,
         keySetW: 200,
-        searchW: 280,
         makeProjectW: 270,
+        searchW: 280,
         mapDisplayW: 360,
         LoginW: 380,
         textboxH: 40,
-        buttonH: 52,
         keySetH: 48,
+        buttonH: 52,
+        mapElementButtonH: 60,
     },
 
     // 1rem = 16px
