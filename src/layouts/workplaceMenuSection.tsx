@@ -5,6 +5,7 @@ import PlayPage from "../pages/PlayPage";
 import { Size } from "../property/Size";
 import MapElementButton from "../components/MapElementButton";
 import { MapTestButton } from "../components/Button";
+import { dataSys } from "../systems/Data";
 
 const toolbarStyle = css({
     // flex
@@ -81,7 +82,7 @@ const WorkplaceMenuSection: Component = () => {
                 <MapTestButton func={() => workplaceSys.setShowPlayPopup(true)}>
                     Play
                 </MapTestButton>
-                <MapTestButton func={() => workplaceSys.setShowPlayPopup(true)}
+                <MapTestButton func={() => dataSys.postGrid(workplaceSys.grid())}
                                activated={workplaceSys.isSaveEnabled}>
                     Save
                 </MapTestButton>
