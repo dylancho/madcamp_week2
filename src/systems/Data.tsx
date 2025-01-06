@@ -179,28 +179,6 @@ class DataSys {
         }
     }
 
-    getKakaoUser = async () => {
-        window.location.href = "http://localhost:4242/auth/kakao";
-    }
-
-    getKakaoUserLogedIn = async () => {
-        const query = new URLSearchParams(window.location.search);
-        const email = query.get("email");
-
-        const foundUser = await this.getUser(email? email : "");
-        
-        if (foundUser != null) {
-            console.log("login success:", foundUser);
-            menuNavigatorSys.setCurState("LogedIn");
-            this.setCurUser("id", foundUser.id);
-            this.setCurUser("email", foundUser.email);
-            this.setCurUser("passward", foundUser.passward);
-            this.setCurUser("name", foundUser.name);
-            this.setCurUser("createdAt", foundUser.createdAt);
-            console.log("info stored:", this.curUser.name);
-        }
-    }
-
     // ## utility functions ## //
     varifyInputs = () => {
         const {email, passward, name} = this.curCreatingAccount;

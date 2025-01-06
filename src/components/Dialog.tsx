@@ -27,6 +27,8 @@ const OverlayStyle = css({
 
 const DialogStyle = css({
     // flex
+    display: 'flex',
+    flexDirection: 'column',
     // position
     position: 'relative',
     // scale

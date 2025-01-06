@@ -27,16 +27,17 @@
     },
 
     ui: {
-        keySetBoxW: 48,
-        keySetW: 140,
+        keySetBoxW: 72,
         dropW: 140,
         profileW: 160,
+        keySetW: 200,
         searchW: 280,
         makeProjectW: 270,
         mapDisplayW: 360,
         LoginW: 380,
         textboxH: 40,
         buttonH: 52,
+        keySetH: 48,
     },
 
     // 1rem = 16px
