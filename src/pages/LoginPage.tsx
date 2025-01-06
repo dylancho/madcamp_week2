@@ -41,7 +41,7 @@ const buttonStyle = css({
 })
 
 const kakaoButtonStyle = css({
-    backgroundColor: "#FEE500",
+    backgroundColor: Color.kakao,
     color: "#000",
     fontWeight: "bold",
     padding: "10px 20px",
@@ -72,17 +72,15 @@ const LoginPage: Component = () => {
 
             <button class={`${ButtonStyle(Size.ui.LoginW)} ${css({marginTop: Size.space.xl})}`}
                     onClick={dataSys.getUserLogedin}>
-                        로그인
+                로그인
             </button>
             <button class={buttonStyle}
                     onClick={() => window.location.href = links.localhost + "/signin"}>
-                        회원가입
+                회원가입
             </button>
             {/* Kakao Login Button */}
-            <button
-                class={kakaoButtonStyle}
-                onClick={dataSys.getKakaoUser}
-            >
+            <button class={kakaoButtonStyle}
+                    onClick={dataSys.getKakaoUser}>
                 Login with Kakao
             </button>
         </div>
