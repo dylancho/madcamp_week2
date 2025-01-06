@@ -23,9 +23,12 @@
         l: 24,
         xl: 36,
         edge: 32,
+        dialog: 72,
     },
 
     ui: {
+        keySetBoxW: 48,
+        keySetW: 140,
         dropW: 140,
         profileW: 160,
         searchW: 280,
