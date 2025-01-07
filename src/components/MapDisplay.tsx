@@ -47,11 +47,10 @@ const MapCardStyle = css({
   boxShadow: "0 0 2px 2px rgba(0, 0, 0, 0.1)",
 });
 
-export const MapDisplay: Component<{ height: number }> = ({ height }) => {
+export const MapDisplay: Component<{ height: number, page: string }> = ({ height, page }) => {
   const [maps] = createResource(() =>
-    dataSys
-      .getMaps()
-      .then((fetchedMaps) => fetchedMaps.map((map: mapType) => map))
+    ((page === "main")? dataSys.getMaps() : dataSys.getMapsByEmail(dataSys.curUser.email))
+    .then((fetchedMaps) => fetchedMaps.map((map: mapType) => map))
   );
 
   return (

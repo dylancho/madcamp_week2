@@ -132,18 +132,6 @@ class DataSys {
     return response.json();
   };
 
-  getUserList = () => {
-    const [users] = createResource(this.fetchUsers);
-
-    return (
-      <ul>
-        {users()?.map((user) => (
-          <li>{user.name}</li>
-        ))}
-      </ul>
-    );
-  };
-
   // Signin function
   addSignedUser = async () => {
     if (await this.varifyInputs()) {
@@ -221,6 +209,39 @@ class DataSys {
       console.error("Error fetching maps:", error);
       return [];
     }
+  };
+
+  getMapsByEmail = async (email: string) => {
+    try {
+      const response = await fetch(links.serverAddress + "/maps/email",{
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    } catch (error) {
+      console.error("Error fetching maps:", error);
+      return [];
+    }
+  };
+
+  getMapsAmount = async () => {
+    console.log("get maps amount")
+    const response = await fetch(links.serverAddress + "/maps/amount");
+    return response.json();
+  };
+
+  getMapsAmountByEmail = async (email: string) => {
+    console.log("get maps amount")
+    const response = await fetch(links.serverAddress + "/maps/amount/email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    return response.json();
   };
 
   putKeys = async (email: string, keys: string[]) => {

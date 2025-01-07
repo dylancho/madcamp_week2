@@ -94,8 +94,8 @@ const KeySet: Component<{
 
 const KeySetGrid: Component<KeySetGridProps> = () => {
   const [keyBindings, setKeyBindings] = createSignal(
-    ["오른쪽", "왼쪽", "아래쪽", "위쪽", "2D", "3D"].map((label) => ({
-      label, // Use the predefined labels
+    ["오른쪽", "왼쪽", "아래쪽", "위쪽", "2D", "3D"].map((label, index) => ({
+      label: dataSys.curUser.keys[index] || "A", // Use the predefined labels
       keyValue: "A", // Default key value
     }))
   );
