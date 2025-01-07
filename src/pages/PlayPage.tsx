@@ -6,8 +6,8 @@ import { workplaceSys } from "../systems/Workplace";
 
 const PlayPageStyle = css({
   // flex
-  display: 'flex',
-  flexDirection: 'column',
+  display: "flex",
+  flexDirection: "column",
   // position
   position: "relative",
   // scale
@@ -17,9 +17,9 @@ const PlayPageStyle = css({
   // color
   // space
   // other
-  overflow: 'hidden',
+  overflow: "hidden",
   boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
-})
+});
 
 const StageStyle = css({
   position: "absolute",
@@ -35,25 +35,29 @@ const StageStyle = css({
   backgroundPosition: "0 100%", // Align grid to the bottom-left
   backgroundColor: "#ffffff", // Game area background color
   border: "2px solid black", // Boundary box border
-})
+});
 
-const TileStyle = (item:Rect, color: string) => { return css({
-  position: "absolute",
-  left: `${item.x}vh`,
-  bottom: `${item.y}vh`,
-  width: `${item.width}vh`,
-  height: `${item.height}vh`,
-  backgroundColor: color,
-})}
+const TileStyle = (item: Rect, color: string) => {
+  return css({
+    position: "absolute",
+    left: `${item.x}vh`,
+    bottom: `${item.y}vh`,
+    width: `${item.width}vh`,
+    height: `${item.height}vh`,
+    backgroundColor: color,
+  });
+};
 
-const CharacterStyle = (item: twoDimScaleType, color: string) => { return css({
-  position: "absolute",
-  left: `${item.x}vh`,
-  bottom: `${item.y}vh`,
-  width: "5vh",
-  height: "5vh",
-  backgroundColor: color,
-})}
+const CharacterStyle = (item: twoDimScaleType, color: string) => {
+  return css({
+    position: "absolute",
+    left: `${item.x}vh`,
+    bottom: `${item.y}vh`,
+    width: "5vh",
+    height: "5vh",
+    backgroundColor: color,
+  });
+};
 
 const IndicatorStyle = css({
   position: "absolute",
@@ -63,12 +67,14 @@ const IndicatorStyle = css({
   backgroundColor: "white",
   padding: "5px",
   borderRadius: "5px",
-})
+});
 
 // PlayPage Component
-const PlayPage: Component<{grid: number[], 
-                           closePopup: () => void,
-                           enableSave: () => void}> = ({grid, closePopup, enableSave}) => {
+const PlayPage: Component<{
+  grid: number[];
+  closePopup: () => void;
+  enableSave: () => void;
+}> = ({ grid, closePopup, enableSave }) => {
   createEffect(() => {
     console.log(workplaceSys.grid());
     if (gameplaySys.isSuccess()) {
@@ -98,8 +104,8 @@ const PlayPage: Component<{grid: number[],
         });
       } else if (cell === 2) {
         gameplaySys.setStartPos({ x: col * 5, y: 70 - row * 5 });
-        gameplaySys.setPosition('x', gameplaySys.startPos.x);
-        gameplaySys.setPosition('y', gameplaySys.startPos.y);
+        gameplaySys.setPosition("x", gameplaySys.startPos.x);
+        gameplaySys.setPosition("y", gameplaySys.startPos.y);
       } else if (cell === 3) {
         gameplaySys.setEndPos({ x: col * 5, y: 70 - row * 5 });
       } else if (cell === 4) {
@@ -115,7 +121,9 @@ const PlayPage: Component<{grid: number[],
     gameplaySys.setObstacles(parsedObstacles);
     gameplaySys.setFloors(parsedFloors);
 
-    gameplaySys.animationFrameId = requestAnimationFrame(gameplaySys.updatePosition);
+    gameplaySys.animationFrameId = requestAnimationFrame(
+      gameplaySys.updatePosition
+    );
 
     return () => {
       window.removeEventListener("keydown", gameplaySys.handleKeyDown);
@@ -133,9 +141,9 @@ const PlayPage: Component<{grid: number[],
       {/* Game Area */}
       <div class={StageStyle}>
         {/* Obstacles */}
-        <For each={gameplaySys.obstacles}>{(obs, __) => 
-          <div class={TileStyle(obs, "green")}></div>
-        }</For>
+        <For each={gameplaySys.obstacles}>
+          {(obs, __) => <div class={TileStyle(obs, "green")}></div>}
+        </For>
         {/* Floors */}
         <div>
           {gameplaySys.floors.map((fls) => (
