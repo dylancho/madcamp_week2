@@ -1,11 +1,12 @@
 import { css } from "@emotion/css";
 import { Component, createEffect} from "solid-js";
 import { workplaceSys } from "../systems/Workplace";
-import PlayPage from "../pages/PlayPage";
 import { Size } from "../property/Size";
 import MapElementButton from "../components/MapElementButton";
-import { MapTestButton } from "../components/Button";
 import { dataSys } from "../systems/Data";
+import { ButtonStyle } from "../property/commonStyles";
+import { Color } from "../property/Color";
+import { IcRun, IcUpload } from "../components/Icons";
 
 const toolbarStyle = css({
     // flex
@@ -48,27 +49,12 @@ const RightMenuStyle = css({
     // other
 });
 
-const DemoStyle = css({
-    // flex
-    // position
-    position: 'fixed',
-    top: "0",
-    left: "0",
-    // scale
-    width: "100%",
-    height: "100%",
-    // text
-    // color
-    // space
-    // other
-})
-
 const WorkplaceMenuSection: Component = () => {
     createEffect(() => {
-        console.log(workplaceSys.isSaveEnabled());
+        console.log('showPlayPopup', workplaceSys.showPlayPopup());
+        console.log('isSaveEnabled', workplaceSys.isSaveEnabled());
     })
     return (
-        <>
         <div class={toolbarStyle}>
             <div class={LeftMenuStyle}>
                 <MapElementButton element={0}>Empty</MapElementButton>
@@ -79,24 +65,18 @@ const WorkplaceMenuSection: Component = () => {
                 <MapElementButton element={-1}>Eraser</MapElementButton>
             </div>
             <div class={RightMenuStyle}>
-                <MapTestButton func={() => workplaceSys.setShowPlayPopup(true)}>
-                    Play
-                </MapTestButton>
-                <MapTestButton func={() => dataSys.postGrid(workplaceSys.grid())}
-                               activated={workplaceSys.isSaveEnabled}>
-                    Save
-                </MapTestButton>
+                <button class={ButtonStyle(Size.ui.mapTestButtonW)}
+                        onClick={() => workplaceSys.setShowPlayPopup(true)}>
+                    <IcRun />
+                </button>
+                <button class={`${ButtonStyle(Size.ui.mapTestButtonW)}
+                                ${css({backgroundColor: workplaceSys.isSaveEnabled()? Color.main : Color.grayDark})}`}
+                        onClick={() => dataSys.postGrid(workplaceSys.grid())}
+                        disabled={!workplaceSys.isSaveEnabled()}>
+                    <IcUpload />
+                </button>
             </div>
         </div>
-            {workplaceSys.showPlayPopup() && (
-                <div style={DemoStyle}>
-                    <PlayPage
-                        grid={workplaceSys.grid()}
-                        closePopup={() => workplaceSys.setShowPlayPopup(false)}
-                        enableSave={() => workplaceSys.setIsSaveEnabled(true)} />
-                </div>
-            )}
-        </>
     )
 }
 

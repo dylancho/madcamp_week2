@@ -1,8 +1,13 @@
 import { css } from "@emotion/css";
-import { Component } from "solid-js";
+import { Component, Show } from "solid-js";
 import { Size } from "../property/Size";
 import WorkplaceMenuSection from "./workplaceMenuSection";
 import MapGrid from "../components/MapGrid";
+import { workplaceSys } from "../systems/Workplace";
+import PlayPage from "../pages/PlayPage";
+import { OverlayStyle } from "../property/commonStyles";
+import { Dialog } from "../components/Dialog";
+import { gameplaySys } from "../systems/Gameplay";
 
 const WorkplaceSectionStyle = css({
     // flex
@@ -31,12 +36,27 @@ const MainTitleStyle = css({
     // other
 })
 
+const TestScaleStyle = css({
+    // scale
+    width: "90%",
+    height: "70%",
+})
+
 const WorkplaceSection: Component = () => {
     return (
         <div class={WorkplaceSectionStyle}>
             <div class={MainTitleStyle}>이름없는 지도</div>
-                <WorkplaceMenuSection />
-                <MapGrid />
+            <WorkplaceMenuSection />
+            <MapGrid />
+            <Dialog isOpen={workplaceSys.showPlayPopup}
+                    setIsOpen={workplaceSys.setShowPlayPopup}
+                    title=""
+                    scale={TestScaleStyle}>
+                <PlayPage
+                    grid={workplaceSys.grid()}
+                    closePopup={() => workplaceSys.setShowPlayPopup(false)}
+                    enableSave={() => workplaceSys.setIsSaveEnabled(true)} />
+            </Dialog>
         </div>
     )
 }

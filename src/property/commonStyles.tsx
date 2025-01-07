@@ -74,3 +74,23 @@ export const LoginLabelStyle = css(({
     marginBottom: Size.space.s,
     // other
 }))
+
+export const OverlayStyle = css({
+    // flex
+    display: "flex",
+    alignItems: 'center',
+    justifyContent: 'center',
+    // position
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    zIndex: 1000,
+    // scale
+    width: '100vw',
+    height: '100vh',
+    // text
+    // color
+    backgroundColor: "rgba(0, 0, 0, 0.5)",
+    // space
+    // other
+})
