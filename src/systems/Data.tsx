@@ -115,11 +115,12 @@ class DataSys {
   };
 
   addUser = async () => {
-    await fetch(links.serverAddress + "/addUser", {
+    const response = await fetch(links.serverAddress + "/addUser", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(this.curCreatingAccount),
     });
+    return response.json();
   };
 
   getUser = async (email: string) => {
@@ -155,14 +156,15 @@ class DataSys {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: this.curCreatingAccount.email }),
     }).then((res) => res.json());
-    console.log(foundUser);
+    
     if (foundUser != null) {
       console.log("email already exist! :", this.curCreatingAccount.email);
       window.location.href = links.localhost + "/signin";
     } else {
-      this.addUser();
-      menuNavigatorSys.setCurState("LogedIn");
-      window.location.href = links.localhost + "/";
+      this.addUser()
+        .then((res) => dataSys.setCurUser(res.user))
+        .then(() => menuNavigatorSys.setCurState("LogedIn"))
+        .then(() => {window.location.href = links.localhost + "/"})
     }
   };
 
@@ -234,7 +236,7 @@ class DataSys {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       return await response.json(); // Parse the JSON response
     } catch (error) {
       console.error("Error updating keys:", error);
@@ -257,7 +259,6 @@ class DataSys {
         },
         body: JSON.stringify(mapData), // Properly stringify the mapData object
       });
-      console.log(JSON.stringify(mapData));
 
       if (!response.ok) {
         throw new Error("Failed to save map");

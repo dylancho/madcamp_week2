@@ -62,7 +62,6 @@ app.post("/addUser", async (req, res) => {
 app.put("/putKeys", async (req, res) => {
   try {
     const { email, keys } = req.body; // Extract email and keys from request body
-    console.log(email, keys);
     // Update the user's keys
     const updatedUser = await prisma.user.update({
       where: {

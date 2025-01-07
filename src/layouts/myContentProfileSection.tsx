@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { Component } from "solid-js";
+import { Component, createEffect } from "solid-js";
 import { Size } from "../property/Size";
 import MainMenuSection from "./mainMenuSection";
 import { dataSys } from "../systems/Data";
@@ -48,6 +48,9 @@ const MyContentProfileTitleStyle = css({
 })
 
 const MyContentProfileSection: Component = () => {
+    createEffect(() => {
+        console.log(dataSys.curUser);
+    })
     return (
         <div class={MyContentProfileSectionStyle}>
             <div class={MyContentProfileImageStyle}></div>
