@@ -55,7 +55,7 @@ const MyContentSection: Component = () => {
             <MainMenuSection />
             <div class={NumMapLabelStyle}>전체 {dataSys.numMyMaps()}개</div>
             <MapDisplay height={64 + Size.ui.profileW + Size.space.l + Size.space.edge}
-                        amount={dataSys.numMyMaps()}></MapDisplay>
+                        page="mycontent"></MapDisplay>
         </div>
     )
 }

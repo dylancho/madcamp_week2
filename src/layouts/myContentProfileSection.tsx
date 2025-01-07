@@ -48,9 +48,6 @@ const MyContentProfileTitleStyle = css({
 })
 
 const MyContentProfileSection: Component = () => {
-    createEffect(() => {
-        console.log(dataSys.curUser);
-    })
     return (
         <div class={MyContentProfileSectionStyle}>
             <div class={MyContentProfileImageStyle}></div>
