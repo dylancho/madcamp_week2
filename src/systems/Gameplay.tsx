@@ -1,5 +1,6 @@
 import { Accessor, createSignal, Setter } from "solid-js"
 import { createStore, SetStoreFunction } from "solid-js/store"
+import { Size } from "../property/Size"
 
 export interface twoDimScaleType {
     x: number,
@@ -14,6 +15,9 @@ export interface Rect {
 }
 
 class GameplaySys {
+    world: number[]
+    setWorld: SetStoreFunction<number[]>
+
     startPos: twoDimScaleType
     setStartPos: SetStoreFunction<twoDimScaleType>
 
@@ -48,6 +52,7 @@ class GameplaySys {
     setLargestOverlap: Setter<number>
 
     constructor() {
+        ([this.world, this.setWorld] = createStore<number[]>(Array(Size.world.col * Size.world.row).fill(0))),
         ([this.startPos, this.setStartPos] = createStore<twoDimScaleType>({x: 0, y: 0})),
         ([this.endPos, this.setEndPos] = createStore<twoDimScaleType>({x: 0, y: 0})),
         ([this.position, this.setPosition] = createStore<twoDimScaleType>({x: 0, y: 0})),
@@ -152,20 +157,13 @@ class GameplaySys {
             }
         }
     
-        for (const floor of this.floors) {
-            const floorLeft = floor.x;
-            const floorRight = floor.x + floor.width;
-            const floorTop = floor.y + floor.height;
-            const floorBottom = floor.y;
-        }
-    
         if (
             charRight > this.endPos.x &&
             charLeft < this.endPos.x + 5 &&
             charTop > this.endPos.y &&
             charBottom < this.endPos.y + 5
         ) {
-            //this.setIsSuccess(true);
+            this.setIsSuccess(true);
         }
     }
 

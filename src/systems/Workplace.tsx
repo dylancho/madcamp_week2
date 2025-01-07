@@ -11,8 +11,8 @@ class WorkplaceSys {
     isSaveEnabled: Accessor<boolean>
     setIsSaveEnabled: Setter<boolean>
 
-    grid: Accessor<number[]>
-    setGrid: Setter<number[]>
+    workingWorld: Accessor<number[]>
+    setWorkingWorld: Setter<number[]>
 
     selectedType: Accessor<elementType>
     setSelectedType: Setter<elementType>
@@ -20,30 +20,30 @@ class WorkplaceSys {
     constructor() {
         ([this.showPlayPopup, this.setShowPlayPopup] = createSignal<boolean>(false)),
         ([this.isSaveEnabled, this.setIsSaveEnabled] = createSignal<boolean>(false)),
-        ([this.grid, this.setGrid] = createSignal<number[]>(Array(Size.world.col * Size.world.row).fill(0))),
+        ([this.workingWorld, this.setWorkingWorld] = createSignal<number[]>(Array(Size.world.col * Size.world.row).fill(0))),
         ([this.selectedType, this.setSelectedType] = createSignal<elementType>(0))
-      }
+    }
 
     handleCellClick = (index: number) => {
-        const newGrid = [... this.grid()];
+        const newWorkingWorld = [... this.workingWorld()];
         const currentType = this.selectedType();
     
         // Handle eraser functionality
         if (currentType === -1) {
-          newGrid[index] = 0; // Clear the cell
+          newWorkingWorld[index] = 0; // Clear the cell
         } else {
           // Ensure only one start and end location
-          if (currentType === 2 && newGrid.includes(2))
+          if (currentType === 2 && newWorkingWorld.includes(2))
             return alert("Only one starting location allowed!");
-          if (currentType === 3 && newGrid.includes(3))
+          if (currentType === 3 && newWorkingWorld.includes(3))
             return alert("Only one end location allowed!");
     
           // Update the cell type
-          newGrid[index] = currentType;
+          newWorkingWorld[index] = currentType;
         }
     
         this.setIsSaveEnabled(false);
-        this.setGrid(newGrid);
+        this.setWorkingWorld(newWorkingWorld);
       };
 }
 
