@@ -6,7 +6,6 @@ import { links } from "../property/Link";
 
 const MakeProjectButtonStyle = css({
     justifySelf: 'end',
-    boxShadow: "0 0 4px 4px rgba(0, 0, 100, 0.1)",
 })
 
 export const MakeProjectButton: Component<{children: JSXElement}> = ({children}) => {

@@ -20,6 +20,7 @@ export const TextboxStyle = (wid: number | string = Size.ui.LoginW) => { return 
     border: "solid 1px",
     borderColor: Color.gray,
     borderRadius: Size.radius.m,
+    boxShadow: "0 0 1px 1px rgba(0, 0, 0, 0.1)",
 })}
 
 export const ButtonStyle = (wid?: number | string) => { return css({
@@ -40,9 +41,15 @@ export const ButtonStyle = (wid?: number | string) => { return css({
     border: 'none',
     borderRadius: Size.radius.m,
     cursor: 'pointer',
+    transition: "transform 0.2s ease-in-out",
     ":hover": {
       filter: 'brightness(1.12)',
+      transform: "scale(1.01)",
     },
+    ":active": {
+        transform: "scale(0.95)",
+    },
+    boxShadow: "0 0 4px 4px rgba(0, 0, 100, 0.1)",
 })}
 
 export const LoginTitleStyle = css({
@@ -99,6 +106,7 @@ export const MapGridStyle = css({
     display: "grid",
     gridTemplateColumns: `repeat(${Size.world.col}, 1fr)`,
     gridTemplateRows: `repeat(${Size.world.row}, 1fr)`,
+    position: 'relative',
     gap: "1px",
     width: "100%",
     height: "100%",

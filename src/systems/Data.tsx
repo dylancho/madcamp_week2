@@ -229,13 +229,11 @@ class DataSys {
   };
 
   getMapsAmount = async () => {
-    console.log("get maps amount")
     const response = await fetch(links.serverAddress + "/maps/amount");
     return response.json();
   };
 
   getMapsAmountByEmail = async (email: string) => {
-    console.log("get maps amount")
     const response = await fetch(links.serverAddress + "/maps/amount/email", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -267,7 +265,7 @@ class DataSys {
 
   postGrid = async (grid: number[]) => {
     const mapData = {
-      name: this.curUser.name, // Replace with the logged-in user's name
+      name: "제목없는 지도", // Replace with the logged-in user's name
       creatorEmail: this.curUser.email, // Replace with the logged-in user's unique ID
       config: grid, // The current grid data
     };

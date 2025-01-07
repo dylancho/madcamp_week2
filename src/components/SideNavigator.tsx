@@ -11,6 +11,7 @@ const SideNavigatorStyle = css({
     // flex
     display: "flex",
     flexDirection: "column",
+    alignItems: 'center',
     // position
     // scale
     width: Size.navigator.width,
