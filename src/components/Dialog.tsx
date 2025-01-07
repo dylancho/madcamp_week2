@@ -1,29 +1,9 @@
 import { css } from "@emotion/css";
 import { Accessor, Component, JSXElement, onCleanup, Setter, Show } from "solid-js";
-import { Color } from "../property/Color";
 import { Size } from "../property/Size";
 import { controlSys } from "../systems/Control";
 import KeySetGrid from "./KeySet";
-
-const OverlayStyle = css({
-    // flex
-    display: "flex",
-    alignItems: 'center',
-    justifyContent: 'center',
-    // position
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    zIndex: 1000,
-    // scale
-    width: '100vw',
-    height: '100vh',
-    // text
-    // color
-    backgroundColor: "rgba(0, 0, 0, 0.5)",
-    // space
-    // other
-})
+import { OverlayStyle } from "../property/commonStyles";
 
 const DialogStyle = css({
     // flex
@@ -60,7 +40,8 @@ const DialogTitleStyle = css({
 export const Dialog: Component<{isOpen: Accessor<boolean>,
                          setIsOpen: Setter<boolean>,
                          title: string,
-                         children: JSXElement}> = ({isOpen, setIsOpen, title, children}) => {
+                         scale?: string,
+                         children: JSXElement}> = ({isOpen, setIsOpen, title, scale, children}) => {
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key == "Escape") {
             setIsOpen(false);
@@ -75,8 +56,10 @@ export const Dialog: Component<{isOpen: Accessor<boolean>,
             <div class={OverlayStyle} onclick={(e) => {
                 if (e.target == e.currentTarget) { setIsOpen(false); }
             }}>
-                <div class={DialogStyle}>
-                    <div class={DialogTitleStyle}>{title}</div>
+                <div class={`${DialogStyle} ${scale? scale: ""}`}>
+                    <Show when={title !== ""}>
+                        <div class={DialogTitleStyle}>{title}</div>
+                    </Show>
                     {children}
                 </div>
             </div>

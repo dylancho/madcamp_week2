@@ -1,4 +1,5 @@
-import { Accessor, createSignal, Setter } from "solid-js"
+import { Accessor, createEffect, createSignal, Setter } from "solid-js"
+import { Size } from "../property/Size";
 
 // 0: empty, 1: obstacle, 2: start, 3: end, -1: eraser
 export type elementType = 0 | 1 | 2 | 3 | -1 | 4;
@@ -19,9 +20,9 @@ class WorkplaceSys {
     constructor() {
         ([this.showPlayPopup, this.setShowPlayPopup] = createSignal<boolean>(false)),
         ([this.isSaveEnabled, this.setIsSaveEnabled] = createSignal<boolean>(false)),
-        ([this.grid, this.setGrid] = createSignal<number[]>(Array(450).fill(0))),
+        ([this.grid, this.setGrid] = createSignal<number[]>(Array(Size.world.col * Size.world.row).fill(0))),
         ([this.selectedType, this.setSelectedType] = createSignal<elementType>(0))
-    }
+      }
 
     handleCellClick = (index: number) => {
         const newGrid = [... this.grid()];

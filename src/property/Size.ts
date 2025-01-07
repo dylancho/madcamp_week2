@@ -52,5 +52,10 @@
         l: '1.75rem', // 28
         login: '3rem', // 48
         main: '3.5rem', // 56
+    },
+
+    world: {
+        row: 15,
+        col: 30,
     }
   }
