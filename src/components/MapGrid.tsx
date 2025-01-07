@@ -77,7 +77,7 @@ const MapGrid: Component = () => {
         <div id="map-container" class={MapContainerStyle}>
             <div class={MapGridWrapperStyle}>
                 <div class={MapGridStyle}>
-                    {workplaceSys.grid().map((cell, index) => (
+                    {workplaceSys.workingWorld().map((cell, index) => (
                         <div class={cellStyle(cell)}
                             onClick={() => workplaceSys.handleCellClick(index)}>
                             {cell === 2 ? "S" : cell === 3 ? "E" : ""}

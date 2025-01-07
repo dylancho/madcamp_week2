@@ -1,8 +1,9 @@
-import { Component, onMount, onCleanup, createEffect, For } from "solid-js";
+import { Component, onMount, onCleanup, createEffect, For, on } from "solid-js";
 import { gameplaySys, Rect, twoDimScaleType } from "../systems/Gameplay";
 import { css } from "@emotion/css";
 import { Color } from "../property/Color";
 import { workplaceSys } from "../systems/Workplace";
+import { Size } from "../property/Size";
 
 const PlayPageStyle = css({
   // flex
@@ -76,7 +77,6 @@ const PlayPage: Component<{
   enableSave: () => void;
 }> = ({ grid, closePopup, enableSave }) => {
   createEffect(() => {
-    console.log(workplaceSys.grid());
     if (gameplaySys.isSuccess()) {
       gameplaySys.setIsSuccess(false);
       closePopup(); // Close the popup
@@ -84,72 +84,75 @@ const PlayPage: Component<{
     }
   });
 
-  onMount(() => {
-    window.addEventListener("keydown", gameplaySys.handleKeyDown);
-    window.addEventListener("keyup", gameplaySys.handleKeyUp);
+  createEffect(on(workplaceSys.showPlayPopup, () => {
+    if (workplaceSys.showPlayPopup()){
+      gameplaySys.setWorld(workplaceSys.workingWorld);
 
-    const parsedObstacles: Rect[] = [];
-    const parsedFloors: Rect[] = [];
+      window.addEventListener("keydown", gameplaySys.handleKeyDown);
+      window.addEventListener("keyup", gameplaySys.handleKeyUp);
+  
+      const parsedObstacles: Rect[] = [];
+      const parsedFloors: Rect[] = [];
 
-    grid.forEach((cell, index) => {
-      const col = index % 30;
-      const row = Math.floor(index / 30);
+      gameplaySys.world.forEach((cell, index) => {
+        const col = index % Size.world.col;
+        const row = Math.floor(index / Size.world.col);
 
-      if (cell === 1) {
-        parsedObstacles.push({
-          x: col * 5,
-          y: 70 - row * 5,
-          width: 5,
-          height: 5,
-        });
-      } else if (cell === 2) {
-        gameplaySys.setStartPos({ x: col * 5, y: 70 - row * 5 });
-        gameplaySys.setPosition("x", gameplaySys.startPos.x);
-        gameplaySys.setPosition("y", gameplaySys.startPos.y);
-      } else if (cell === 3) {
-        gameplaySys.setEndPos({ x: col * 5, y: 70 - row * 5 });
-      } else if (cell === 4) {
-        parsedFloors.push({
-          x: col * 5,
-          y: 70 - row * 5,
-          width: 5,
-          height: 5,
-        });
-      }
-    });
+        const posX = col * Size.world.block;
+        const posY = (Size.world.row - row - 1) * Size.world.block;
+  
+        if (cell === 1) { // obstacle
+          console.log('obstacle', index, { x: posX, y: posY,
+            width: Size.world.block,
+            height: Size.world.block,
+          });
+          parsedObstacles.push({ x: posX, y: posY,
+            width: Size.world.block,
+            height: Size.world.block,
+          });
+        } else if (cell === 2) { // start
+          gameplaySys.setPosition({ x: posX, y: posY });
+        } else if (cell === 3) { // end
+          gameplaySys.setEndPos({ x: posX, y: posY });
+        } else if (cell === 4) { // floor
+          console.log('floor', index, { x: posX, y: posY,
+            width: Size.world.block,
+            height: Size.world.block,
+          });
+          parsedFloors.push({ x: posX, y: posY,
+            width: Size.world.block,
+            height: Size.world.block,
+          });
+        }
+      });
 
-    gameplaySys.setObstacles(parsedObstacles);
-    gameplaySys.setFloors(parsedFloors);
-
-    gameplaySys.animationFrameId = requestAnimationFrame(
-      gameplaySys.updatePosition
-    );
-
-    return () => {
-      window.removeEventListener("keydown", gameplaySys.handleKeyDown);
-      window.removeEventListener("keyup", gameplaySys.handleKeyUp);
-    };
-  });
-
-  onCleanup(() => {
-    cancelAnimationFrame(gameplaySys.animationFrameId);
-    gameplaySys.animationFrameId = 0;
-  });
+      gameplaySys.setObstacles(parsedObstacles);
+      gameplaySys.setFloors(parsedFloors);
+  
+      gameplaySys.animationFrameId = requestAnimationFrame(gameplaySys.updatePosition);
+  
+      return () => {
+        window.removeEventListener("keydown", gameplaySys.handleKeyDown);
+        window.removeEventListener("keyup", gameplaySys.handleKeyUp);
+      };
+    } else {
+      cancelAnimationFrame(gameplaySys.animationFrameId);
+      gameplaySys.animationFrameId = 0;
+    }
+  }))
 
   return (
     <div class={PlayPageStyle}>
       {/* Game Area */}
       <div class={StageStyle}>
         {/* Obstacles */}
-        <For each={gameplaySys.obstacles}>
-          {(obs, __) => <div class={TileStyle(obs, "green")}></div>}
-        </For>
+        <For each={gameplaySys.obstacles}>{(obs, _) => 
+          <div class={TileStyle(obs, "green")}></div>
+        }</For>
         {/* Floors */}
-        <div>
-          {gameplaySys.floors.map((fls) => (
-            <div class={TileStyle(fls, "orange")}></div>
-          ))}
-        </div>
+        <For each={gameplaySys.floors}>{(fls, _) => 
+          <div class={TileStyle(fls, "orange")}></div>
+        }</For>
         {/* Endpoint */}
         <div class={CharacterStyle(gameplaySys.endPos, "yellow")}></div>
         {/* Character */}

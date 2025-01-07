@@ -71,7 +71,7 @@ const WorkplaceMenuSection: Component = () => {
                 </button>
                 <button class={`${ButtonStyle(Size.ui.mapTestButtonW)}
                                 ${css({backgroundColor: workplaceSys.isSaveEnabled()? Color.main : Color.grayDark})}`}
-                        onClick={() => dataSys.postGrid(workplaceSys.grid())}
+                        onClick={() => dataSys.postGrid(workplaceSys.workingWorld())}
                         disabled={!workplaceSys.isSaveEnabled()}>
                     <IcUpload />
                 </button>

@@ -55,6 +55,7 @@
     },
 
     world: {
+        block: 5,
         row: 15,
         col: 30,
     }

@@ -1,6 +1,6 @@
-import { Accessor, createSignal, Setter } from "solid-js";
-import { createStore, SetStoreFunction } from "solid-js/store";
-import { dataSys } from "./Data";
+import { Accessor, createSignal, Setter } from "solid-js"
+import { createStore, SetStoreFunction } from "solid-js/store"
+import { Size } from "../property/Size"
 
 export interface twoDimScaleType {
   x: number;
@@ -15,65 +15,56 @@ export interface Rect {
 }
 
 class GameplaySys {
-  startPos: twoDimScaleType;
-  setStartPos: SetStoreFunction<twoDimScaleType>;
+    world: number[]
+    setWorld: SetStoreFunction<number[]>
 
-  endPos: twoDimScaleType;
-  setEndPos: SetStoreFunction<twoDimScaleType>;
+    startPos: twoDimScaleType
+    setStartPos: SetStoreFunction<twoDimScaleType>
 
-  position: twoDimScaleType;
-  setPosition: SetStoreFunction<twoDimScaleType>;
+    endPos: twoDimScaleType
+    setEndPos: SetStoreFunction<twoDimScaleType>
 
-  velocity: twoDimScaleType;
-  setVelocity: SetStoreFunction<twoDimScaleType>;
+    position: twoDimScaleType
+    setPosition: SetStoreFunction<twoDimScaleType>
 
-  obstacles: Rect[];
-  setObstacles: SetStoreFunction<Rect[]>;
+    velocity: twoDimScaleType
+    setVelocity: SetStoreFunction<twoDimScaleType>
 
-  floors: Rect[];
-  setFloors: SetStoreFunction<Rect[]>;
+    obstacles: Rect[]
+    setObstacles: SetStoreFunction<Rect[]>
 
-  isSuccess: Accessor<boolean>;
-  setIsSuccess: Setter<boolean>;
+    floors: Rect[]
+    setFloors: SetStoreFunction<Rect[]>
 
-  isJumping: Accessor<boolean>;
-  setIsJumping: Setter<boolean>;
+    isSuccess: Accessor<boolean>
+    setIsSuccess: Setter<boolean>
 
-  is3DMode: Accessor<boolean>;
-  setIs3DMode: Setter<boolean>;
+    isJumping: Accessor<boolean>
+    setIsJumping: Setter<boolean>
 
-  deathCnt: Accessor<number>;
-  setDeathCnt: Setter<number>;
+    is3DMode: Accessor<boolean>
+    setIs3DMode: Setter<boolean>
 
-  largestOverlap: Accessor<number>;
-  setLargestOverlap: Setter<number>;
+    deathCnt: Accessor<number>
+    setDeathCnt: Setter<number>
 
-  constructor() {
-    ([this.startPos, this.setStartPos] = createStore<twoDimScaleType>({
-      x: 0,
-      y: 0,
-    })),
-      ([this.endPos, this.setEndPos] = createStore<twoDimScaleType>({
-        x: 0,
-        y: 0,
-      })),
-      ([this.position, this.setPosition] = createStore<twoDimScaleType>({
-        x: 0,
-        y: 0,
-      })),
-      ([this.velocity, this.setVelocity] = createStore<twoDimScaleType>({
-        x: 0,
-        y: 0,
-      })),
-      ([this.obstacles, this.setObstacles] = createStore<Rect[]>([])),
-      ([this.floors, this.setFloors] = createStore<Rect[]>([])),
-      ([this.isSuccess, this.setIsSuccess] = createSignal<boolean>(false)),
-      ([this.isJumping, this.setIsJumping] = createSignal<boolean>(false)),
-      ([this.is3DMode, this.setIs3DMode] = createSignal<boolean>(false)),
-      ([this.deathCnt, this.setDeathCnt] = createSignal<number>(0)),
-      ([this.largestOverlap, this.setLargestOverlap] = createSignal<number>(0)),
-      this.fetchUserKeys();
-  }
+    largestOverlap: Accessor<number>
+    setLargestOverlap: Setter<number>
+
+    constructor() {
+        ([this.world, this.setWorld] = createStore<number[]>(Array(Size.world.col * Size.world.row).fill(0))),
+        ([this.startPos, this.setStartPos] = createStore<twoDimScaleType>({x: 0, y: 0})),
+        ([this.endPos, this.setEndPos] = createStore<twoDimScaleType>({x: 0, y: 0})),
+        ([this.position, this.setPosition] = createStore<twoDimScaleType>({x: 0, y: 0})),
+        ([this.velocity, this.setVelocity] = createStore<twoDimScaleType>({x: 0, y: 0})),
+        ([this.obstacles, this.setObstacles] = createStore<Rect[]>([])),
+        ([this.floors, this.setFloors] = createStore<Rect[]>([])),
+        ([this.isSuccess, this.setIsSuccess] = createSignal<boolean>(false)),
+        ([this.isJumping, this.setIsJumping] = createSignal<boolean>(false)),
+        ([this.is3DMode, this.setIs3DMode] = createSignal<boolean>(false)),
+        ([this.deathCnt, this.setDeathCnt] = createSignal<number>(0)),
+        ([this.largestOverlap, this.setLargestOverlap] = createSignal<number>(0))
+    }
 
   gravity = 0.05; // Gravity strength for 2D mode
   jumpStrength = 1; // Initial upward velocity
@@ -159,25 +150,23 @@ class GameplaySys {
     }
   };
 
-  // Handle key up events
-  handleKeyUp = (e: KeyboardEvent) => {
-    this.pressedKeys[e.key] = false;
-
-    const { keyRight, keyLeft, keyUp, keyDown } = this.keyMappings;
-
-    if (!this.pressedKeys[keyLeft] && !this.pressedKeys[keyRight]) {
-      this.setVelocity("x", 0);
-    } else if (this.pressedKeys[keyLeft]) {
-      this.setVelocity("x", -this.speed);
-    } else if (this.pressedKeys[keyRight]) {
-      this.setVelocity("x", this.speed);
+    handleKeyUp = (e: KeyboardEvent) => {
+        this.pressedKeys[e.key] = false; // Mark the key as released
+      
+        // Update horizontal movement based on remaining pressed keys
+        if (!this.pressedKeys["ArrowLeft"] && !this.pressedKeys["ArrowRight"]) {
+          this.setVelocity('x', 0); // Stop horizontal movement
+        } else if (this.pressedKeys["ArrowLeft"]) {
+          this.setVelocity('x', -this.speed); // Move left
+        } else if (this.pressedKeys["ArrowRight"]) {
+          this.setVelocity('x', this.speed); // Move right
+        }
+      
+        // Stop vertical movement in 3D mode
+        if (this.is3DMode() && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
+            this.setVelocity('y', 0);
+        }
     }
-
-    if (this.is3DMode() && (e.key === keyUp || e.key === keyDown)) {
-      this.setVelocity("y", 0);
-    }
-  };
-
 
   // Collision detection
   checkCollisionObstacle = () => {
@@ -214,6 +203,41 @@ class GameplaySys {
       //this.setIsSuccess(true);
     }
   };
+    // Collision detection
+    checkCollisionObstacle = () => {
+        const charLeft = this.position.x;
+        const charRight = this.position.x + 5; // Character width
+        const charTop = this.position.y + 5; // Character top edge
+        const charBottom = this.position.y; // Character bottom edge
+    
+        for (const obstacle of this.obstacles) {
+            const obsLeft = obstacle.x;
+            const obsRight = obstacle.x + obstacle.width;
+            const obsTop = obstacle.y + obstacle.height;
+            const obsBottom = obstacle.y;
+        
+            // Check if character intersects with the obstacle
+            if (
+                charRight > obsLeft && // Character's right edge passes obstacle's left edge
+                charLeft < obsRight && // Character's left edge passes obstacle's right edge
+                charTop > obsBottom && // Character's top edge passes obstacle's bottom edge
+                charBottom < obsTop // Character's bottom edge passes obstacle's top edge
+            ) {
+                this.setDeathCnt(this.deathCnt() + 1);
+                this.setPosition('x', this.startPos.x); // Reset to start
+                this.setPosition('y', this.startPos.y);
+            }
+        }
+    
+        if (
+            charRight > this.endPos.x &&
+            charLeft < this.endPos.x + 5 &&
+            charTop > this.endPos.y &&
+            charBottom < this.endPos.y + 5
+        ) {
+            this.setIsSuccess(true);
+        }
+    }
 
   checkCollisionFloor() {
     const charLeft = this.position.x;

@@ -53,7 +53,7 @@ const WorkplaceSection: Component = () => {
                     title=""
                     scale={TestScaleStyle}>
                 <PlayPage
-                    grid={workplaceSys.grid()}
+                    grid={workplaceSys.workingWorld()}
                     closePopup={() => workplaceSys.setShowPlayPopup(false)}
                     enableSave={() => workplaceSys.setIsSaveEnabled(true)} />
             </Dialog>
