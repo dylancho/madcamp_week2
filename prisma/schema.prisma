@@ -17,11 +17,11 @@ model User {
 }
 
 model Map {
-  id        Int      @id @default(autoincrement())
-  name      String   @default("new experiment")
-  creatorId Int
-  createdAt DateTime @default(now())
-  rating    Float    @default(0.0)
-  config    Int[]
-  creator   User     @relation(fields: [creatorId], references: [id])
+  id           Int      @id @default(autoincrement())
+  name         String   @default("new experiment")
+  creatorEmail String
+  createdAt    DateTime @default(now())
+  rating       Float    @default(0.0)
+  config       Int[]
+  creator      User     @relation(fields: [creatorEmail], references: [email])
 }

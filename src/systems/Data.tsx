@@ -7,7 +7,6 @@ import {
   Setter,
 } from "solid-js";
 import { links } from "../property/Link";
-import { JsonValue } from "@prisma/client/runtime/library";
 import { createStore, SetStoreFunction } from "solid-js/store";
 import { menuNavigatorSys } from "./MenuNavigator";
 
@@ -30,7 +29,7 @@ export interface mapType {
   name: string;
   id: number;
   createdAt: Date;
-  creatorId: number;
+  creatorEmail: string;
   rating: number;
   config: number[];
 }
@@ -42,11 +41,20 @@ class DataSys {
   curUser: userType;
   setCurUser: SetStoreFunction<userType>;
 
+  curMap: mapType;
+  setCurMap: SetStoreFunction<mapType>;
+
   numMaps: Accessor<number>;
   setNumMaps: Setter<number>;
 
   numMyMaps: Accessor<number>;
   setNumMyMaps: Setter<number>;
+
+  mapCreator: Accessor<string>;
+  setMapCreator: Setter<string>;
+
+  mapDate: Accessor<string>;
+  setMapDate: Setter<string>;
 
   constructor() {
     ([this.curCreatingAccount, this.setCurCreatingAccount] =
@@ -63,8 +71,19 @@ class DataSys {
         createdAt: new Date(),
         map: [],
       })),
-      ([this.numMaps, this.setNumMaps] = createSignal<number>(15)),
-      ([this.numMyMaps, this.setNumMyMaps] = createSignal<number>(4)),
+      ([this.curMap, this.setCurMap] = createStore<mapType>({
+        name: "",
+        id: -1,
+        createdAt: new Date(),
+        creatorEmail: "",
+        rating: 0.0,
+        config: [],
+      })),
+      ([this.numMaps, this.setNumMaps] = createSignal<number>(0)),
+      ([this.numMyMaps, this.setNumMyMaps] = createSignal<number>(0)),
+      ([this.mapCreator, this.setMapCreator] = createSignal<string>("")),
+      ([this.mapDate, this.setMapDate] = createSignal<string>("")),
+
       onMount(() => {
         const savedUser = localStorage.getItem("curUser");
         const initialUser: userType = savedUser
@@ -79,6 +98,7 @@ class DataSys {
             };
 
         [this.curUser, this.setCurUser] = createStore<userType>(initialUser);
+
       });
     // Update localStorage whenever curState changes
     createEffect(() => {
@@ -201,7 +221,7 @@ class DataSys {
   postGrid = async (grid: number[]) => {
     const mapData = {
       name: this.curUser.name, // Replace with the logged-in user's name
-      creatorId: this.curUser.id, // Replace with the logged-in user's unique ID
+      creatorEmail: this.curUser.email, // Replace with the logged-in user's unique ID
       config: grid, // The current grid data
     };
 

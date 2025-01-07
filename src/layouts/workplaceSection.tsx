@@ -1,13 +1,11 @@
 import { css } from "@emotion/css";
-import { Component, Show } from "solid-js";
+import { Component } from "solid-js";
 import { Size } from "../property/Size";
 import WorkplaceMenuSection from "./workplaceMenuSection";
 import MapGrid from "../components/MapGrid";
 import { workplaceSys } from "../systems/Workplace";
 import PlayPage from "../pages/PlayPage";
-import { OverlayStyle } from "../property/commonStyles";
 import { Dialog } from "../components/Dialog";
-import { gameplaySys } from "../systems/Gameplay";
 
 const WorkplaceSectionStyle = css({
     // flex
@@ -37,9 +35,12 @@ const MainTitleStyle = css({
 })
 
 const TestScaleStyle = css({
+    alignItems: 'center',
+    justifyContent: 'center',
     // scale
     width: "90%",
-    height: "70%",
+    height: "80%",
+    padding: Size.space.edge,
 })
 
 const WorkplaceSection: Component = () => {
@@ -51,9 +52,8 @@ const WorkplaceSection: Component = () => {
             <Dialog isOpen={workplaceSys.showPlayPopup}
                     setIsOpen={workplaceSys.setShowPlayPopup}
                     title=""
-                    scale={TestScaleStyle}>
+                    customStyle={TestScaleStyle}>
                 <PlayPage
-                    grid={workplaceSys.workingWorld()}
                     closePopup={() => workplaceSys.setShowPlayPopup(false)}
                     enableSave={() => workplaceSys.setIsSaveEnabled(true)} />
             </Dialog>

@@ -55,8 +55,8 @@
     },
 
     world: {
-        block: 5,
-        row: 15,
-        col: 30,
+        block: 5, //vh
+        row: 10,
+        col: 20,
     }
   }

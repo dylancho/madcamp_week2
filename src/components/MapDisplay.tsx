@@ -1,9 +1,9 @@
 import { css } from "@emotion/css";
 import { Component, For, createResource } from "solid-js";
 import { Size } from "../property/Size";
-import { dataSys } from "../systems/Data";
+import { dataSys, mapType } from "../systems/Data";
 import { Color } from "../property/Color";
-import { controlSys } from "../systems/Control";
+import { CellStyle, MapGridStyle } from "../property/commonStyles";
 
 const MapDisplayStyle = (height: number) => {
   return css({
@@ -36,7 +36,7 @@ const MapCardStyle = css({
   // position
   // scale
   width: "100%",
-  aspectRatio: "16 / 9",
+  aspectRatio: "16 / 8",
   // text
   // color
   backgroundColor: Color.grayLight,
@@ -47,51 +47,32 @@ const MapCardStyle = css({
   boxShadow: "0 0 2px 2px rgba(0, 0, 0, 0.1)",
 });
 
-const MapGridStyle = css({
-  display: "grid",
-  gridTemplateColumns: "repeat(30, 1fr)", // 30 columns
-  gridTemplateRows: "repeat(15, 1fr)", // 15 rows
-  gap: "1px",
-  width: "100%",
-  height: "100%",
-  backgroundColor: Color.grayLight,
-});
-
-const CellStyle = (cellType: number) => {
-  let bgColor = "#fff";
-  if (cellType === 1) bgColor = "green"; // Obstacle
-  else if (cellType === 2) bgColor = "#00ff00"; // Start
-  else if (cellType === 3) bgColor = "#ffff00"; // End
-  else if (cellType === 4) bgColor = "orange";
-  return css({
-    backgroundColor: bgColor,
-    width: "100%",
-    height: "100%",
-  });
-};
-
-export const MapDisplay: Component<{ height: number; amount: number }> = ({
-  height,
-  amount,
-}) => {
+export const MapDisplay: Component<{ height: number }> = ({ height }) => {
   const [maps] = createResource(() =>
     dataSys
       .getMaps()
-      .then((fetchedMaps) => fetchedMaps.map((map) => map.config))
+      .then((fetchedMaps) => fetchedMaps.map((map: mapType) => map))
   );
+
   return (
     <div class={MapDisplayStyle(height)}>
-      <For each={maps()}>
-        {(config) => (
-          <div class={MapCardStyle}>
+      <For each={maps()}>{(map) => (
+          <div class={MapCardStyle}
+               onclick={() => {
+                dataSys.setCurMap('name', map.name)
+                dataSys.setCurMap('id', map.id)
+                dataSys.setCurMap('createdAt', map.createdAt)
+                dataSys.setCurMap('creatorEmail', map.creatorEmail)
+                dataSys.setCurMap('rating', map.rating)
+                dataSys.setCurMap('config', map.config)
+               }}>
             <div class={MapGridStyle}>
-              <For each={config}>
+              <For each={map.config}>
                 {(cell) => <div class={CellStyle(cell)}></div>}
               </For>
             </div>
           </div>
-        )}
-      </For>
+       )}</For>
     </div>
   );
 };

@@ -79,13 +79,17 @@ app.post("/getUser", async (req, res) => {
 
 app.post("/save/maps", async (req, res) => {
   try {
-    const { name, creatorId, config }: mapType = req.body;
+    const { name, creatorEmail, config }: mapType = req.body;
     // Create a new map in the database
     const newMap = await prisma.map.create({
       data: {
         name,
-        creatorId,
         config,
+        creator: {
+          connect: {
+            email: creatorEmail // Connect to the existing user
+          },
+        },
       },
     });
 

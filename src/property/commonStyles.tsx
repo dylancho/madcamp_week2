@@ -94,3 +94,26 @@ export const OverlayStyle = css({
     // space
     // other
 })
+
+export const MapGridStyle = css({
+    display: "grid",
+    gridTemplateColumns: `repeat(${Size.world.col}, 1fr)`,
+    gridTemplateRows: `repeat(${Size.world.row}, 1fr)`,
+    gap: "1px",
+    width: "100%",
+    height: "100%",
+    backgroundColor: Color.grayLight,
+});
+  
+export const CellStyle = (cellType: number) => {
+    let bgColor = "#fff";
+    if (cellType === 1) bgColor = "green"; // Obstacle
+    else if (cellType === 2) bgColor = "#00ff00"; // Start
+    else if (cellType === 3) bgColor = "#ffff00"; // End
+    else if (cellType === 4) bgColor = "orange";
+    return css({
+      backgroundColor: bgColor,
+      width: "100%",
+      height: "100%",
+    });
+};

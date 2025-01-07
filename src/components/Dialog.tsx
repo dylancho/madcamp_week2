@@ -1,9 +1,11 @@
 import { css } from "@emotion/css";
-import { Accessor, Component, JSXElement, onCleanup, Setter, Show } from "solid-js";
+import { Accessor, Component, For, JSXElement, onCleanup, Setter, Show } from "solid-js";
 import { Size } from "../property/Size";
 import { controlSys } from "../systems/Control";
 import KeySetGrid from "./KeySet";
-import { OverlayStyle } from "../property/commonStyles";
+import { CellStyle, MapGridStyle, OverlayStyle } from "../property/commonStyles";
+import { dataSys } from "../systems/Data";
+import MapInfoSection from "../layouts/mapInfoSection";
 
 const DialogStyle = css({
     // flex
@@ -40,8 +42,8 @@ const DialogTitleStyle = css({
 export const Dialog: Component<{isOpen: Accessor<boolean>,
                          setIsOpen: Setter<boolean>,
                          title: string,
-                         scale?: string,
-                         children: JSXElement}> = ({isOpen, setIsOpen, title, scale, children}) => {
+                         customStyle?: string,
+                         children: JSXElement}> = ({isOpen, setIsOpen, title, customStyle, children}) => {
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key == "Escape") {
             setIsOpen(false);
@@ -56,7 +58,7 @@ export const Dialog: Component<{isOpen: Accessor<boolean>,
             <div class={OverlayStyle} onclick={(e) => {
                 if (e.target == e.currentTarget) { setIsOpen(false); }
             }}>
-                <div class={`${DialogStyle} ${scale? scale: ""}`}>
+                <div class={`${DialogStyle} ${customStyle? customStyle: ""}`}>
                     <Show when={title !== ""}>
                         <div class={DialogTitleStyle}>{title}</div>
                     </Show>
@@ -71,8 +73,9 @@ export const MapDialog: Component = () => {
     return (
         <Dialog isOpen={controlSys.isMapDialogOpen}
                 setIsOpen={controlSys.setIsMapDialogOpen}
-                title="지도 이름">
-            <p>this is map dialog.</p>
+                title="">
+            <div class={DialogTitleStyle}>{dataSys.curMap.name}</div>
+            <MapInfoSection />
         </Dialog>
     )
 }

@@ -6,36 +6,34 @@ import { workplaceSys } from "../systems/Workplace";
 import { Size } from "../property/Size";
 
 const PlayPageStyle = css({
-  // flex
   display: 'flex',
   flexDirection: 'column',
-  // position
-  position: "relative",
-  // scale
-  width: "100vw",
-  height: "100vh",
-  // text
-  // color
-  // space
-  // other
-  overflow: 'hidden',
-  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+  justifyContent: 'center',
+  alignItems: 'center',
+  width: '100%',
+  height: '100%',
+  gap: Size.space.s,
+});
+
+const StageWrapperStyle = css({
+  display: 'flex',
+  flex: 1,
+  justifyContent: 'center',
+  alignItems: 'center',
+  position: 'relative',
 })
 
 const StageStyle = css({
   position: "absolute",
-  left: `${gameplaySys.leftWall}vh`,
-  bottom: `${gameplaySys.groundLevel}vh`, // Adjust for grid alignment
   width: `${gameplaySys.rightWall - gameplaySys.leftWall}vh`,
   height: `${gameplaySys.ceilingLevel - gameplaySys.groundLevel}vh`,
   backgroundImage: `
     linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px)
   `,
-  backgroundSize: "5vh 5vh", // Grid size
-  backgroundPosition: "0 100%", // Align grid to the bottom-left
-  backgroundColor: "#ffffff", // Game area background color
-  border: "2px solid black", // Boundary box border
+  backgroundSize: `${Size.world.block}vh ${Size.world.block}vh`, // Grid size
+  backgroundColor: 'white', // Game area background color
+  border: `3px solid ${Color.mainDark}`,
 })
 
 const TileStyle = (item:Rect, color: string) => { return css({
@@ -51,15 +49,12 @@ const CharacterStyle = (item: twoDimScaleType, color: string) => { return css({
   position: "absolute",
   left: `${item.x}vh`,
   bottom: `${item.y}vh`,
-  width: "5vh",
-  height: "5vh",
+  width: `${Size.world.block}vh`,
+  height: `${Size.world.block}vh`,
   backgroundColor: color,
 })}
 
 const IndicatorStyle = css({
-  position: "absolute",
-  top: "10px",
-  left: "10px",
   color: "black",
   backgroundColor: "white",
   padding: "5px",
@@ -67,9 +62,10 @@ const IndicatorStyle = css({
 })
 
 // PlayPage Component
-const PlayPage: Component<{grid: number[], 
-                           closePopup: () => void,
-                           enableSave: () => void}> = ({grid, closePopup, enableSave}) => {
+const PlayPage: Component<{closePopup: () => void,
+                           enableSave: () => void}> = ({closePopup, enableSave}) => {
+  let playPageRef: HTMLDivElement | undefined;
+
   createEffect(() => {
     if (gameplaySys.isSuccess()) {
       gameplaySys.setIsSuccess(false);
@@ -84,9 +80,6 @@ const PlayPage: Component<{grid: number[],
 
       window.addEventListener("keydown", gameplaySys.handleKeyDown);
       window.addEventListener("keyup", gameplaySys.handleKeyUp);
-  
-      const parsedObstacles: Rect[] = [];
-      const parsedFloors: Rect[] = [];
 
       gameplaySys.world.forEach((cell, index) => {
         const col = index % Size.world.col;
@@ -94,34 +87,29 @@ const PlayPage: Component<{grid: number[],
 
         const posX = col * Size.world.block;
         const posY = (Size.world.row - row - 1) * Size.world.block;
-  
+        
+        const curPos: twoDimScaleType = {
+          x: posX,
+          y: posY,
+        }
+
+        const curRect: Rect = {
+          x: posX,
+          y: posY,
+          width: Size.world.block,
+          height: Size.world.block,
+        }
+
         if (cell === 1) { // obstacle
-          console.log('obstacle', index, { x: posX, y: posY,
-            width: Size.world.block,
-            height: Size.world.block,
-          });
-          parsedObstacles.push({ x: posX, y: posY,
-            width: Size.world.block,
-            height: Size.world.block,
-          });
+          gameplaySys.setObstacles((prev) => [...prev, curRect])
         } else if (cell === 2) { // start
-          gameplaySys.setPosition({ x: posX, y: posY });
+          gameplaySys.setPosition(curPos);
         } else if (cell === 3) { // end
-          gameplaySys.setEndPos({ x: posX, y: posY });
+          gameplaySys.setEndPos(curPos);
         } else if (cell === 4) { // floor
-          console.log('floor', index, { x: posX, y: posY,
-            width: Size.world.block,
-            height: Size.world.block,
-          });
-          parsedFloors.push({ x: posX, y: posY,
-            width: Size.world.block,
-            height: Size.world.block,
-          });
+          gameplaySys.setFloors((prev) => [...prev, curRect])
         }
       });
-
-      gameplaySys.setObstacles(parsedObstacles);
-      gameplaySys.setFloors(parsedFloors);
   
       gameplaySys.animationFrameId = requestAnimationFrame(gameplaySys.updatePosition);
   
@@ -133,24 +121,59 @@ const PlayPage: Component<{grid: number[],
       cancelAnimationFrame(gameplaySys.animationFrameId);
       gameplaySys.animationFrameId = 0;
     }
-  }))
+  }));
+
+  createEffect(() => {
+    if (!playPageRef) return;
+
+    const resizePlayPage = () => {
+        const container = playPageRef.parentElement; // The Dialog's content wrapper
+        if (!container) return;
+
+        const containerWidth = container.clientWidth;
+        const containerHeight = container.clientHeight;
+
+        const aspectRatio = Size.world.row / Size.world.col; // Calculate the grid's aspect ratio
+        const containerRatio = containerHeight / containerWidth;
+
+        if (containerRatio > aspectRatio) {
+            // Fit horizontally
+            playPageRef.style.width = `${containerWidth}px`;
+            playPageRef.style.height = `${containerWidth * aspectRatio}px`;
+        } else {
+            // Fit vertically
+            playPageRef.style.width = `${containerHeight / aspectRatio}px`;
+            playPageRef.style.height = `${containerHeight}px`;
+        }
+    };
+
+    // Resize on load and window resize
+    resizePlayPage();
+    window.addEventListener('resize', resizePlayPage);
+
+    onCleanup(() => {
+        window.removeEventListener('resize', resizePlayPage);
+    });
+  });
 
   return (
-    <div class={PlayPageStyle}>
+    <div class={PlayPageStyle} ref={playPageRef}>
       {/* Game Area */}
-      <div class={StageStyle}>
-        {/* Obstacles */}
-        <For each={gameplaySys.obstacles}>{(obs, _) => 
-          <div class={TileStyle(obs, "green")}></div>
-        }</For>
-        {/* Floors */}
-        <For each={gameplaySys.floors}>{(fls, _) => 
-          <div class={TileStyle(fls, "orange")}></div>
-        }</For>
-        {/* Endpoint */}
-        <div class={CharacterStyle(gameplaySys.endPos, "yellow")}></div>
-        {/* Character */}
-        <div class={CharacterStyle(gameplaySys.position, Color.main)}></div>
+      <div class={StageWrapperStyle}>
+        <div class={StageStyle}>
+          {/* Obstacles */}
+          <For each={gameplaySys.obstacles}>{(obs, _) => 
+            <div class={TileStyle(obs, "green")}></div>
+          }</For>
+          {/* Floors */}
+          <For each={gameplaySys.floors}>{(fls, _) => 
+            <div class={TileStyle(fls, "orange")}></div>
+          }</For>
+          {/* Endpoint */}
+          <div class={CharacterStyle(gameplaySys.endPos, "yellow")}></div>
+          {/* Character */}
+          <div class={CharacterStyle(gameplaySys.position, Color.main)}></div>
+        </div>
       </div>
 
       {/* Mode Indicator */}

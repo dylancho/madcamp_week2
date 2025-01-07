@@ -5,6 +5,8 @@ import MainMenuSection from "./mainMenuSection";
 import { dataSys } from "../systems/Data";
 import { Color } from "../property/Color";
 import { MapDisplay } from "../components/MapDisplay";
+import { MapDialog } from "../components/Dialog";
+import { controlSys } from "../systems/Control";
 
 const MainSectionStyle = css({
     // flex
@@ -55,8 +57,10 @@ const MainSection: Component = () => {
             <div class={MainTitleStyle}>메인 타이틀</div>
             <MainMenuSection></MainMenuSection>
             <div class={NumMapLabelStyle}>전체 {dataSys.numMaps()}개</div>
-            <MapDisplay height={64 + 75 + Size.space.edge}
-                        amount={dataSys.numMaps()}></MapDisplay>
+            <div onclick={() => controlSys.setIsMapDialogOpen(true)}>
+                <MapDisplay height={64 + 75 + Size.space.edge}/>
+            </div>
+            <MapDialog />
         </div>
     )
 }
