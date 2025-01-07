@@ -62,25 +62,20 @@ app.post("/addUser", async (req, res) => {
 app.put("/putKeys", async (req, res) => {
   try {
     const { email, keys } = req.body; // Extract email and keys from request body
-
-    // Validation
-    if (!email) {
-      return res.status(400).json({ error: "Email is required" });
-    }
-
-    if (!Array.isArray(keys)) {
-      return res.status(400).json({ error: "Keys must be an array" });
-    }
-
+    console.log(email, keys);
     // Update the user's keys
     const updatedUser = await prisma.user.update({
-      where: { email }, // Filter by email
-      data: { keys }, // Update the keys field
+      where: {
+        email: email
+      }, // Filter by email
+      data: {
+        keys : keys,
+      }, // Update the keys field
     });
 
     res.json({
       message: "Keys updated successfully",
-      updatedKeys: updatedUser.keys,
+      updatedKeys: updatedUser.keys
     });
   } catch (error) {
     console.error("Error updating keys:", error);

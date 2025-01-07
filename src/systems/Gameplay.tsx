@@ -1,6 +1,7 @@
 import { Accessor, createSignal, Setter } from "solid-js"
 import { createStore, SetStoreFunction } from "solid-js/store"
 import { Size } from "../property/Size"
+import { dataSys } from "./Data";
 
 export interface twoDimScaleType {
   x: number;
@@ -78,9 +79,10 @@ class GameplaySys {
   keys: string[] = []; // Store the user's custom key bindings
   keyMappings: Record<string, string> = {};
 
-  async fetchUserKeys() {
+  fetchUserKeys = async () => {
     try {
-      const user = await dataSys.getUser(dataSys.curCreatingAccount.email); // Fetch the user
+      const user = await dataSys.getUser(dataSys.curUser.email); // Fetch the user
+      console.log('user', user);
       if (user?.keys && user.keys.length >= 6) {
         this.keys = user.keys; // Use the fetched keys
       } else {
@@ -126,7 +128,7 @@ class GameplaySys {
   handleKeyDown = (e: KeyboardEvent) => {
     this.pressedKeys[e.key] = true;
 
-    const { keyRight, keyLeft, keyUp, keyDown, key2, key3 } = this.keyMappings;
+    const { keyRight, keyLeft, keyDown, keyUp, key2, key3 } = this.keyMappings;
 
     if (e.key === key2 && this.is3DMode()) {
       this.setIs3DMode(false);
@@ -154,16 +156,16 @@ class GameplaySys {
         this.pressedKeys[e.key] = false; // Mark the key as released
       
         // Update horizontal movement based on remaining pressed keys
-        if (!this.pressedKeys["ArrowLeft"] && !this.pressedKeys["ArrowRight"]) {
+        if (!this.pressedKeys[this.keyMappings['keyLeft']] && !this.pressedKeys[this.keyMappings['keyRight']]) {
           this.setVelocity('x', 0); // Stop horizontal movement
-        } else if (this.pressedKeys["ArrowLeft"]) {
+        } else if (this.pressedKeys[this.keyMappings['keyLeft']]) {
           this.setVelocity('x', -this.speed); // Move left
-        } else if (this.pressedKeys["ArrowRight"]) {
+        } else if (this.pressedKeys[this.keyMappings['keyRight']]) {
           this.setVelocity('x', this.speed); // Move right
         }
       
         // Stop vertical movement in 3D mode
-        if (this.is3DMode() && (e.key === "ArrowUp" || e.key === "ArrowDown")) {
+        if (this.is3DMode() && (e.key === this.keyMappings['keyUp'] || e.key === this.keyMappings['keyDown'])) {
             this.setVelocity('y', 0);
         }
     }
@@ -200,44 +202,9 @@ class GameplaySys {
       charTop > this.endPos.y &&
       charBottom < this.endPos.y + 5
     ) {
-      //this.setIsSuccess(true);
+      this.setIsSuccess(true);
     }
   };
-    // Collision detection
-    checkCollisionObstacle = () => {
-        const charLeft = this.position.x;
-        const charRight = this.position.x + 5; // Character width
-        const charTop = this.position.y + 5; // Character top edge
-        const charBottom = this.position.y; // Character bottom edge
-    
-        for (const obstacle of this.obstacles) {
-            const obsLeft = obstacle.x;
-            const obsRight = obstacle.x + obstacle.width;
-            const obsTop = obstacle.y + obstacle.height;
-            const obsBottom = obstacle.y;
-        
-            // Check if character intersects with the obstacle
-            if (
-                charRight > obsLeft && // Character's right edge passes obstacle's left edge
-                charLeft < obsRight && // Character's left edge passes obstacle's right edge
-                charTop > obsBottom && // Character's top edge passes obstacle's bottom edge
-                charBottom < obsTop // Character's bottom edge passes obstacle's top edge
-            ) {
-                this.setDeathCnt(this.deathCnt() + 1);
-                this.setPosition('x', this.startPos.x); // Reset to start
-                this.setPosition('y', this.startPos.y);
-            }
-        }
-    
-        if (
-            charRight > this.endPos.x &&
-            charLeft < this.endPos.x + 5 &&
-            charTop > this.endPos.y &&
-            charBottom < this.endPos.y + 5
-        ) {
-            this.setIsSuccess(true);
-        }
-    }
 
   checkCollisionFloor() {
     const charLeft = this.position.x;

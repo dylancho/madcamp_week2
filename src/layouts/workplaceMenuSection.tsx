@@ -50,10 +50,6 @@ const RightMenuStyle = css({
 });
 
 const WorkplaceMenuSection: Component = () => {
-    createEffect(() => {
-        console.log('showPlayPopup', workplaceSys.showPlayPopup());
-        console.log('isSaveEnabled', workplaceSys.isSaveEnabled());
-    })
     return (
         <div class={toolbarStyle}>
             <div class={LeftMenuStyle}>

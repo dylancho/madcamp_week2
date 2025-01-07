@@ -44,7 +44,7 @@ export const Dialog: Component<{isOpen: Accessor<boolean>,
                          title: string,
                          customStyle?: string,
                          children: JSXElement}> = ({isOpen, setIsOpen, title, customStyle, children}) => {
-                          
+
     const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key == "Escape") {
             setIsOpen(false);
@@ -108,6 +108,8 @@ export const SettingDialog: Component = () => {
     "KeyLeft",
     "KeyDown",
     "KeyUp",
+    "2",
+    "3",
   ]);
 
   // Handler to update keys on the backend

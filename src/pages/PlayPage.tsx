@@ -67,6 +67,8 @@ const IndicatorStyle = css({
 const PlayPage: Component<{closePopup: () => void,
                            enableSave: () => void}> = ({closePopup, enableSave}) => {
   let playPageRef: HTMLDivElement | undefined;
+  onMount(() => {
+  })
 
   createEffect(() => {
     if (gameplaySys.isSuccess()) {
@@ -79,6 +81,7 @@ const PlayPage: Component<{closePopup: () => void,
   createEffect(on(workplaceSys.showPlayPopup, () => {
     if (workplaceSys.showPlayPopup()){
       gameplaySys.setWorld(workplaceSys.workingWorld);
+      gameplaySys.fetchUserKeys();
 
       window.addEventListener("keydown", gameplaySys.handleKeyDown);
       window.addEventListener("keyup", gameplaySys.handleKeyUp);

@@ -2,6 +2,7 @@ import { css } from "@emotion/css";
 import { Component, For, createSignal } from "solid-js";
 import { Size } from "../property/Size";
 import { Color } from "../property/Color";
+import { dataSys } from "../systems/Data";
 
 const KeySetContainerStyle = css({
   display: "flex",
@@ -93,8 +94,8 @@ const KeySet: Component<{
 
 const KeySetGrid: Component<KeySetGridProps> = () => {
   const [keyBindings, setKeyBindings] = createSignal(
-    Array.from({ length: 6 }, (_, i) => ({
-      label: `Control ${i + 1}`,
+    ["오른쪽", "왼쪽", "아래쪽", "위쪽", "2D", "3D"].map((label) => ({
+      label, // Use the predefined labels
       keyValue: "A", // Default key value
     }))
   );
@@ -105,6 +106,8 @@ const KeySetGrid: Component<KeySetGridProps> = () => {
         i === index ? { ...binding, keyValue: newKey } : binding
       )
     );
+    const keyBindingsList = keyBindings().map((e: any) => e.keyValue);
+    dataSys.putKeys(dataSys.curUser.email, keyBindingsList)
   };
 
   return (

@@ -221,7 +221,7 @@ class DataSys {
     }
   };
 
-  putKeys = async (email, keys) => {
+  putKeys = async (email: string, keys: string[]) => {
     try {
       const response = await fetch(links.serverAddress + "/putKeys", {
         method: "PUT", // Use the PUT method for updates
@@ -234,7 +234,7 @@ class DataSys {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-
+      
       return await response.json(); // Parse the JSON response
     } catch (error) {
       console.error("Error updating keys:", error);
