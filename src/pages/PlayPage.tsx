@@ -36,14 +36,16 @@ const StageStyle = css({
   border: `3px solid ${Color.mainDark}`,
 })
 
-const TileStyle = (item:Rect, color: string) => { return css({
-  position: "absolute",
-  left: `${item.x}vh`,
-  bottom: `${item.y}vh`,
-  width: `${item.width}vh`,
-  height: `${item.height}vh`,
-  backgroundColor: color,
-})}
+const TileStyle = (item: Rect, color: string) => {
+  return css({
+    position: "absolute",
+    left: `${item.x}vh`,
+    bottom: `${item.y}vh`,
+    width: `${item.width}vh`,
+    height: `${item.height}vh`,
+    backgroundColor: color,
+  });
+};
 
 const CharacterStyle = (item: twoDimScaleType, color: string) => { return css({
   position: "absolute",
@@ -59,7 +61,7 @@ const IndicatorStyle = css({
   backgroundColor: "white",
   padding: "5px",
   borderRadius: "5px",
-})
+});
 
 // PlayPage Component
 const PlayPage: Component<{closePopup: () => void,

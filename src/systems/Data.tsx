@@ -22,6 +22,7 @@ interface userType {
   name: string;
   passward: string;
   createdAt: Date;
+  keys: string[];
   map: mapType[];
 }
 
@@ -69,6 +70,7 @@ class DataSys {
         name: "",
         passward: "",
         createdAt: new Date(),
+        keys: [],
         map: [],
       })),
       ([this.curMap, this.setCurMap] = createStore<mapType>({
@@ -94,6 +96,7 @@ class DataSys {
               name: "",
               passward: "",
               createdAt: new Date(),
+              keys: [],
               map: [],
             };
 
@@ -215,6 +218,27 @@ class DataSys {
     } catch (error) {
       console.error("Error fetching maps:", error);
       return [];
+    }
+  };
+
+  putKeys = async (email, keys) => {
+    try {
+      const response = await fetch(links.serverAddress + "/putKeys", {
+        method: "PUT", // Use the PUT method for updates
+        headers: {
+          "Content-Type": "application/json", // Ensure JSON payload is sent
+        },
+        body: JSON.stringify({ email, keys }), // Include email and keys in the request body
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      return await response.json(); // Parse the JSON response
+    } catch (error) {
+      console.error("Error updating keys:", error);
+      return null;
     }
   };
 

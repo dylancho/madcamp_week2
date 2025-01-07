@@ -1,100 +1,127 @@
 import { css } from "@emotion/css";
-import { Component, For } from "solid-js";
+import { Component, For, createSignal } from "solid-js";
 import { Size } from "../property/Size";
 import { Color } from "../property/Color";
 
 const KeySetContainerStyle = css({
-    // flex
-    display: 'flex',
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-})
+  display: "flex",
+  flex: 1,
+  flexDirection: "column",
+  justifyContent: "center",
+  alignItems: "center",
+});
 
 const KeySetGridStyle = css({
-    // grids
-    display: 'grid',
-    gridTemplateRows: 'repeat(4, 1fr)',
-    gridAutoFlow: 'column',
-    // position
-    // scale
-    // text
-    // color
-    // space
-    rowGap: Size.space.edge,
-    columnGap: 120,
-    // other
-})
+  display: "grid",
+  gridTemplateRows: "repeat(4, 1fr)",
+  gridAutoFlow: "column",
+  rowGap: Size.space.edge,
+  columnGap: 120,
+});
 
 const KeySetStyle = css({
-    // flex
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    // position
-    // scale
-    width: Size.ui.keySetW,
-    height: Size.ui.keySetH,
-    // text
-    // color
-    // space
-    // other
-})
+  display: "flex",
+  flexDirection: "row",
+  justifyContent: "space-between",
+  alignItems: "center",
+  width: Size.ui.keySetW,
+  height: Size.ui.keySetH,
+});
 
 const KeySetLabelStyle = css({
-    // flex
-    // position
-    // scale
-    height: '100%',
-    // text
-    fontSize: Size.font.l,
-    fontWeight: 'bold',
-    textAlign: 'left',
-    lineHeight: 1.5,
-    // color
-    // space
-    // other
-})
+  height: "100%",
+  fontSize: Size.font.l,
+  fontWeight: "bold",
+  textAlign: "left",
+  lineHeight: 1.5,
+});
 
 const KeySetBoxStyle = css({
-    // flex
-    // position
-    // scale
-    width: Size.ui.keySetBoxW,
-    height: '100%',
-    // text
-    fontSize: Size.font.l,
-    textAlign: 'center',
-    lineHeight: 1.5,
-    // color
-    backgroundColor: Color.gray,
-    // space
-    // other
-    borderRadius: Size.radius.m,
-    boxShadow: "0 4px 4px rgba(0, 0, 0, 0.1)",
-})
+  width: Size.ui.keySetBoxW,
+  height: "100%",
+  fontSize: Size.font.l,
+  textAlign: "center",
+  lineHeight: 1.5,
+  backgroundColor: Color.gray,
+  borderRadius: Size.radius.m,
+  boxShadow: "0 4px 4px rgba(0, 0, 0, 0.1)",
+  cursor: "pointer", // Add pointer cursor to indicate clickability
+});
 
-const KeySet: Component<{label: string, key: string}> = ({label, key}) => {
-    return (
-        <div class={KeySetStyle}>
-            <div class={KeySetLabelStyle}>{label}</div>
-            <div class={KeySetBoxStyle}>{key}</div>
-        </div>
-    )
-}
+const CapturingStyle = css({
+  backgroundColor: Color.grayDark, // Change color to indicate active capturing
+});
 
-const KeySetGrid: Component = () => {
-    return (
-        <div class={KeySetContainerStyle}>
-            <div class={KeySetGridStyle}>
-                <For each={Array.from({length: 8})}>{(_, i) =>
-                    <KeySet label={`조작 ${i()}`} key={"a"}></KeySet>
-                }</For>
-            </div>
-        </div>
-    )
-}
+type KeySetGridProps = {
+  keyBindings: string[]; // Array of key bindings
+  onKeyChange: (index: number, newKey: string) => void; // Callback for key change
+};
 
-export default KeySetGrid
+const KeySet: Component<{
+  label: string;
+  keyValue: string;
+  onKeyChange: (newKey: string) => void;
+}> = (props) => {
+  const [capturing, setCapturing] = createSignal(false);
+
+  const handleKeyDownOnce = (e: KeyboardEvent) => {
+    e.preventDefault();
+    const pressedKey = e.key;
+    setCapturing(false);
+    props.onKeyChange(pressedKey);
+    document.removeEventListener("keydown", handleKeyDownOnce);
+  };
+
+  const startCapturing = () => {
+    if (capturing()) return;
+    setCapturing(true);
+    document.addEventListener("keydown", handleKeyDownOnce, { once: true });
+  };
+
+  return (
+    <div class={KeySetStyle}>
+      <div class={KeySetLabelStyle}>{props.label}</div>
+      <div
+        class={`${KeySetBoxStyle} ${capturing() ? CapturingStyle : ""}`}
+        onClick={startCapturing}
+      >
+        {capturing() ? "Press any key..." : props.keyValue}
+      </div>
+    </div>
+  );
+};
+
+const KeySetGrid: Component<KeySetGridProps> = () => {
+  const [keyBindings, setKeyBindings] = createSignal(
+    Array.from({ length: 6 }, (_, i) => ({
+      label: `Control ${i + 1}`,
+      keyValue: "A", // Default key value
+    }))
+  );
+
+  const handleKeyChange = (index: number, newKey: string) => {
+    setKeyBindings((prev) =>
+      prev.map((binding, i) =>
+        i === index ? { ...binding, keyValue: newKey } : binding
+      )
+    );
+  };
+
+  return (
+    <div class={KeySetContainerStyle}>
+      <div class={KeySetGridStyle}>
+        <For each={keyBindings()}>
+          {(binding, i) => (
+            <KeySet
+              label={binding.label}
+              keyValue={binding.keyValue}
+              onKeyChange={(newKey) => handleKeyChange(i(), newKey)}
+            />
+          )}
+        </For>
+      </div>
+    </div>
+  );
+};
+
+export default KeySetGrid;

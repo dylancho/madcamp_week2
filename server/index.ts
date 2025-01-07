@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
-import { accountType, mapType } from "../src/systems/Data";
+import { accountType, dataSys, mapType } from "../src/systems/Data";
 import axios from "axios";
 import dotenv from "dotenv";
 dotenv.config();
@@ -56,6 +56,34 @@ app.post("/addUser", async (req, res) => {
     res
       .status(500)
       .json({ message: "[Error] An error occurred while adding the user" });
+  }
+});
+
+app.put("/putKeys", async (req, res) => {
+  try {
+    const { email, keys } = req.body; // Extract email and keys from request body
+
+    // Validation
+    if (!email) {
+      return res.status(400).json({ error: "Email is required" });
+    }
+
+    if (!Array.isArray(keys)) {
+      return res.status(400).json({ error: "Keys must be an array" });
+    }
+
+    // Update the user's keys
+    const updatedUser = await prisma.user.update({
+      where: { email }, // Filter by email
+      data: { keys }, // Update the keys field
+    });
+
+    res.json({
+      message: "Keys updated successfully",
+      updatedKeys: updatedUser.keys,
+    });
+  } catch (error) {
+    console.error("Error updating keys:", error);
   }
 });
 

@@ -13,6 +13,7 @@ model User {
   name      String   @default("Nupzuk")
   passward  String
   createdAt DateTime @default(now())
+  keys      String[] @default(dbgenerated("'{keyRight,keyLeft,keyDown,keyUp,2,3}'::text[]"))
   Map       Map[]
 }
 
