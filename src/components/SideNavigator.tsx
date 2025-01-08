@@ -29,15 +29,18 @@ const LogoStyle = css({
     // flex
     // position
     // scale
-    width: 60,
-    height: 60,
+    width: 64,
+    height: 64,
     // text
     // color
-    backgroundColor: Color.grayDark,
     // space
     margin: 20,
     // other
-    cursor: "pointer",
+    transition: "transform 0.5s ease-in-out",
+    ":hover": {
+        cursor: "pointer",
+        transform: "scale(1.05)",
+    },
 })
 
 const menus: Record<stateType, menuType[]> = {
@@ -51,7 +54,7 @@ const SideNavigator: Component = () => {
     return (
         <>
         <div class={SideNavigatorStyle}>
-            <div class={LogoStyle} onClick={() => window.location.href = links.localhost + "/"}></div>
+            <img src="/ic_logo_banner.svg" class={LogoStyle} onClick={() => window.location.href = links.localhost + "/"}></img>
             <For each={menus[menuNavigatorSys.curState()]}>{(menu, _) =>
                 <MenuIcon menu={menu}></MenuIcon>
             }</For>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="_레이어_3" data-name="레이어 3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 160">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-2 {
+        fill: #2088ca;
+      }
+    </style>
+  </defs>
+  <rect class="cls-2" x=".2" y=".2" width="160" height="160"/>
+  <g>
+    <circle class="cls-1" cx="39.2" cy="84.2" r="20"/>
+    <circle cx="39.2" cy="84.2" r="13"/>
+  </g>
+  <g>
+    <circle class="cls-1" cx="122.2" cy="84.2" r="20"/>
+    <circle cx="122.2" cy="84.2" r="13"/>
+  </g>
+</svg>

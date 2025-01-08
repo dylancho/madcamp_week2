@@ -59,7 +59,7 @@ const MyContentProfileWrapperStyle = css({
 const MyContentProfileSection: Component = () => {
     return (
         <div class={MyContentProfileSectionStyle}>
-            <div class={MyContentProfileImageStyle}></div>
+            <img src="/img_profile.svg" class={MyContentProfileImageStyle}></img>
             <div class={MyContentProfileWrapperStyle}>
                 <div class={MyContentProfileTitleStyle}>{dataSys.curUser.name}</div>
                 <div>시작한 날짜 : {(new Date(dataSys.curUser.createdAt)).toLocaleDateString("ko-kR")}</div>
