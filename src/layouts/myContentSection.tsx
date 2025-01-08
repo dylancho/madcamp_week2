@@ -7,7 +7,7 @@ import { Color } from "../property/Color";
 import { MapDisplay } from "../components/MapDisplay";
 import MyContentProfileSection from "./myContentProfileSection";
 import { MapDialog } from "../components/Dialog";
-import { controlSys } from "../systems/Control";
+import { dialogSys } from "../systems/DialogControl";
 
 const MyContentSectionStyle = css({
     // flex
@@ -56,7 +56,7 @@ const MyContentSection: Component = () => {
             <MyContentProfileSection />
             <MainMenuSection />
             <div class={NumMapLabelStyle}>전체 {dataSys.numMyMaps()}개</div>
-            <div onclick={() => controlSys.setIsMapDialogOpen(true)}>
+            <div onclick={() => dialogSys.setIsMapDialogOpen(true)}>
                 <MapDisplay height={64 + Size.ui.profileW + Size.space.l + Size.space.edge}
                             page="mycontent"></MapDisplay>
             </div>

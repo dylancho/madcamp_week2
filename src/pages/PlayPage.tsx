@@ -17,13 +17,6 @@ const PlayPageStyle = css({
 })
 
 const PlayPage: Component = () => {
-    onMount(async () => {
-        await dataSys
-          .getMapsAmount()
-          .then((res) => dataSys.setNumMaps(res.mapCount));
-      });
-    createEffect(() => dataSys.getKakaoUserLogedIn())
-
     return (
         <div class={PlayPageStyle}>
             <PlaySection isInPopup={false} />

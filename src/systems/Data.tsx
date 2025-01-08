@@ -10,6 +10,7 @@ import { links } from "../property/Link";
 import { createStore, SetStoreFunction } from "solid-js/store";
 import { menuNavigatorSys } from "./MenuNavigator";
 import { workplaceSys } from "./Workplace";
+import { dialogSys } from "./DialogControl";
 
 export interface accountType {
   email: string;
@@ -270,6 +271,15 @@ class DataSys {
       body: JSON.stringify({ email }),
     });
     return response.json();
+  };
+
+  increaseRating = async (id: number) => {
+    const response = await fetch(links.serverAddress + "/map/rating", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: id, increment: dialogSys.isLike()? 1 : 0 }),
+    });
+    window.location.href = links.localhost + "/"
   };
 
   putKeys = async (email: string, keys: string[]) => {

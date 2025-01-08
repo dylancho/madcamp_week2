@@ -47,6 +47,7 @@ const KeySetBoxStyle = css({
   borderRadius: Size.radius.m,
   boxShadow: "0 4px 4px rgba(0, 0, 0, 0.1)",
   cursor: "pointer", // Add pointer cursor to indicate clickability
+  overflow: 'clip',
 });
 
 const CapturingStyle = css({
@@ -86,7 +87,7 @@ const KeySet: Component<{
         class={`${KeySetBoxStyle} ${capturing() ? CapturingStyle : ""}`}
         onClick={startCapturing}
       >
-        {capturing() ? "true" : props.keyValue}
+        {capturing() ? "..." : props.keyValue}
       </div>
     </div>
   );
@@ -94,9 +95,9 @@ const KeySet: Component<{
 
 const KeySetGrid: Component<KeySetGridProps> = () => {
   const [keyBindings, setKeyBindings] = createSignal(
-    ["오른쪽 이동", "왼쪽 이동", "아래쪽 이동", "위쪽 이동", "2D로 전환", "3D로 전환"].map((label, index) => ({
+    ["오른쪽", "왼쪽", "아래쪽", "위쪽", "2D 전환", "3D 전환"].map((label, index) => ({
       label, // Use the predefined labels
-      keyValue: "A", // Default key value
+      keyValue: dataSys.curUser.keys[index] || "A", // Use dataSys.curUser.key if available, default to "A"
     }))
   );
 
