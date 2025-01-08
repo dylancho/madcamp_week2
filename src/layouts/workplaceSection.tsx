@@ -5,11 +5,7 @@ import WorkplaceMenuSection from "./workplaceMenuSection";
 import MapGrid from "../components/MapGrid";
 import { workplaceSys } from "../systems/Workplace";
 import { Dialog } from "../components/Dialog";
-<<<<<<< HEAD
-import { dataSys } from "../systems/Data";
-=======
 import PlaySection from "./PlaySection";
->>>>>>> 9b0ce34b69a58a377239cfdd58e976ee130390b2
 
 const WorkplaceSectionStyle = css({
   // flex
@@ -27,18 +23,6 @@ const WorkplaceSectionStyle = css({
 });
 
 const MainTitleStyle = css({
-<<<<<<< HEAD
-  // flex
-  // position
-  // scale
-  // text
-  fontSize: Size.font.login,
-  fontWeight: "bold",
-  // color
-  // space
-  // other
-});
-=======
     // flex
     // position
     // scale
@@ -58,7 +42,6 @@ const MainTitleStyle = css({
         borderRadius: Size.radius.m,
     }
 })
->>>>>>> 9b0ce34b69a58a377239cfdd58e976ee130390b2
 
 const TestScaleStyle = css({
   alignItems: "center",
@@ -70,40 +53,6 @@ const TestScaleStyle = css({
 });
 
 const WorkplaceSection: Component = () => {
-<<<<<<< HEAD
-  const [mapName, setMapName] = createSignal(dataSys.curUser.name);
-  const handleNameChange = (e: Event) => {
-    const target = e.target as HTMLInputElement;
-    setMapName(target.value);
-    dataSys.setCurMap("name", mapName());
-  };
-  return (
-    <div class={WorkplaceSectionStyle}>
-      {/* Input for map name */}
-      <input
-        type="text"
-        class={MainTitleStyle}
-        value={mapName()} // Bind input value to mapName
-        onInput={handleNameChange} // Update mapName on user input
-        placeholder="Enter map name"
-      />
-      <WorkplaceMenuSection />
-      <MapGrid />
-      <Dialog
-        isOpen={workplaceSys.showPlayPopup}
-        setIsOpen={workplaceSys.setShowPlayPopup}
-        title=""
-        customStyle={TestScaleStyle}
-      >
-        <PlayPage
-          closePopup={() => workplaceSys.setShowPlayPopup(false)}
-          enableSave={() => workplaceSys.setIsSaveEnabled(true)}
-        />
-      </Dialog>
-    </div>
-  );
-};
-=======
     return (
         <div class={WorkplaceSectionStyle}>
             <input class={MainTitleStyle}
@@ -120,6 +69,5 @@ const WorkplaceSection: Component = () => {
         </div>
     )
 }
->>>>>>> 9b0ce34b69a58a377239cfdd58e976ee130390b2
 
 export default WorkplaceSection;

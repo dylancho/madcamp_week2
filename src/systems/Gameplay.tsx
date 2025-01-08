@@ -46,10 +46,9 @@ class GameplaySys {
   floors: Rect[];
   setFloors: SetStoreFunction<Rect[]>;
 
-    empty: Rect[]
-    setEmpty: SetStoreFunction<Rect[]>
+  empty: Rect[];
+  setEmpty: SetStoreFunction<Rect[]>;
 
-    
   turtles: Turt[];
   setTurtles: SetStoreFunction<Turt[]>;
 
@@ -67,22 +66,36 @@ class GameplaySys {
   largestOverlap: Accessor<number>;
   setLargestOverlap: Setter<number>;
 
-    constructor() {
-        ([this.world, this.setWorld] = createStore<number[]>(Array(Size.world.col * Size.world.row).fill(0))),
-        ([this.startPos, this.setStartPos] = createStore<twoDimScaleType>({x: 0, y: 0})),
-        ([this.endPos, this.setEndPos] = createStore<twoDimScaleType>({x: 0, y: 0})),
-        ([this.position, this.setPosition] = createStore<twoDimScaleType>({x: 0, y: 0})),
-        ([this.velocity, this.setVelocity] = createStore<twoDimScaleType>({x: 0, y: 0})),
-        ([this.obstacles, this.setObstacles] = createStore<Rect[]>([])),
-        ([this.floors, this.setFloors] = createStore<Rect[]>([])),
-        ([this.turtles, this.setTurtles] = createStore<Turt[]>([])),
-        ([this.empty, this.setEmpty] = createStore<Rect[]>([])),
-        ([this.isSuccess, this.setIsSuccess] = createSignal<boolean>(false)),
-        ([this.isJumping, this.setIsJumping] = createSignal<boolean>(false)),
-        ([this.is3DMode, this.setIs3DMode] = createSignal<boolean>(false)),
-        ([this.deathCnt, this.setDeathCnt] = createSignal<number>(0)),
-        ([this.largestOverlap, this.setLargestOverlap] = createSignal<number>(0))
-    }
+  constructor() {
+    ([this.world, this.setWorld] = createStore<number[]>(
+      Array(Size.world.col * Size.world.row).fill(0)
+    )),
+      ([this.startPos, this.setStartPos] = createStore<twoDimScaleType>({
+        x: 0,
+        y: 0,
+      })),
+      ([this.endPos, this.setEndPos] = createStore<twoDimScaleType>({
+        x: 0,
+        y: 0,
+      })),
+      ([this.position, this.setPosition] = createStore<twoDimScaleType>({
+        x: 0,
+        y: 0,
+      })),
+      ([this.velocity, this.setVelocity] = createStore<twoDimScaleType>({
+        x: 0,
+        y: 0,
+      })),
+      ([this.obstacles, this.setObstacles] = createStore<Rect[]>([])),
+      ([this.floors, this.setFloors] = createStore<Rect[]>([])),
+      ([this.turtles, this.setTurtles] = createStore<Turt[]>([])),
+      ([this.empty, this.setEmpty] = createStore<Rect[]>([])),
+      ([this.isSuccess, this.setIsSuccess] = createSignal<boolean>(false)),
+      ([this.isJumping, this.setIsJumping] = createSignal<boolean>(false)),
+      ([this.is3DMode, this.setIs3DMode] = createSignal<boolean>(false)),
+      ([this.deathCnt, this.setDeathCnt] = createSignal<number>(0)),
+      ([this.largestOverlap, this.setLargestOverlap] = createSignal<number>(0));
+  }
 
   gravity = 0.05; // Gravity strength for 2D mode
   jumpStrength = 1; // Initial upward velocity
@@ -98,53 +111,72 @@ class GameplaySys {
   keyMappings: Record<string, string> = {};
 
   initialize = (world: number[]) => {
-      this.setWorld(world);
-      this.setObstacles([]);
-      this.setFloors([]);
-      this.setEmpty([]);
-      this.fetchUserKeys();
+    this.setWorld(world);
+    this.setObstacles([]);
+    this.setFloors([]);
+    this.setEmpty([]);
+    this.setTurtles([]);
+    this.fetchUserKeys();
 
-      window.addEventListener("keydown", this.handleKeyDown);
-      window.addEventListener("keyup", this.handleKeyUp);
+    window.addEventListener("keydown", this.handleKeyDown);
+    window.addEventListener("keyup", this.handleKeyUp);
 
-      this.world.forEach((cell, index) => {
-        const col = index % Size.world.col;
-        const row = Math.floor(index / Size.world.col);
+    this.world.forEach((cell, index) => {
+      const col = index % Size.world.col;
+      const row = Math.floor(index / Size.world.col);
 
-        const posX = col * Size.world.block;
-        const posY = (Size.world.row - row - 1) * Size.world.block;
-        
-        const curPos: twoDimScaleType = {
-          x: posX,
-          y: posY,
-        }
+      const posX = col * Size.world.block;
+      const posY = (Size.world.row - row - 1) * Size.world.block;
 
-        const curRect: Rect = {
-          x: posX,
-          y: posY,
-          width: Size.world.block,
-          height: Size.world.block,
-        }
-        if (cell === 1) { // obstacle
-          this.setObstacles((prev) => [...prev, curRect])
-        } else if (cell === 2) { // start
-          this.setPosition(curPos);
-        } else if (cell === 3) { // end
-          this.setEndPos(curPos);
-        } else if (cell === 4) { // floor
-          this.setFloors((prev) => [...prev, curRect])
-        } else { // empty
-          this.setEmpty((prev) => [...prev, curRect])
-        }
-      });
-  
-      this.animationFrameId = requestAnimationFrame(this.updatePosition);
-  
-      return () => {
-        window.removeEventListener("keydown", this.handleKeyDown);
-        window.removeEventListener("keyup", this.handleKeyUp);
+      const curPos: twoDimScaleType = {
+        x: posX,
+        y: posY,
       };
-  }
+
+      const curRect: Rect = {
+        x: posX,
+        y: posY,
+        width: Size.world.block,
+        height: Size.world.block,
+      };
+
+      const curTurt: Turt = {
+        x: posX,
+        y: posY,
+        width: Size.world.block,
+        height: Size.world.block,
+        fall: 0,
+        direction: 1,
+      };
+
+      if (cell === 1) {
+        // obstacle
+        this.setObstacles((prev) => [...prev, curRect]);
+      } else if (cell === 2) {
+        // start
+        this.setPosition(curPos);
+      } else if (cell === 3) {
+        // end
+        this.setEndPos(curPos);
+      } else if (cell === 4) {
+        // floor
+        this.setFloors((prev) => [...prev, curRect]);
+      } else if (cell === 5) {
+        // floor
+        this.setTurtles((prev) => [...prev, curTurt]);
+      } else {
+        // empty
+        this.setEmpty((prev) => [...prev, curRect]);
+      }
+    });
+
+    this.animationFrameId = requestAnimationFrame(this.updatePosition);
+
+    return () => {
+      window.removeEventListener("keydown", this.handleKeyDown);
+      window.removeEventListener("keyup", this.handleKeyUp);
+    };
+  };
 
   fetchUserKeys = async () => {
     try {
