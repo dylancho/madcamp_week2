@@ -22,6 +22,7 @@ export interface Turt {
   height: number;
   fall: number;
   direction: number;
+  overlap: number;
 }
 
 class GameplaySys {
@@ -63,6 +64,7 @@ class GameplaySys {
 
   deathCnt: Accessor<number>;
   setDeathCnt: Setter<number>;
+
   largestOverlap: Accessor<number>;
   setLargestOverlap: Setter<number>;
 
@@ -147,6 +149,7 @@ class GameplaySys {
         height: Size.world.block,
         fall: 0,
         direction: 1,
+        overlap: 0,
       };
 
       if (cell === 1) {
@@ -390,7 +393,7 @@ class GameplaySys {
     return isColliding;
   }
 
-  checkTurtleColliding(index: number): boolean {
+  checkTurtleColliding(index: number) {
     const turtle = this.turtles[index]; // Access the current turtle
     const turtLeft = turtle.x;
     const turtRight = turtle.x + 5; // Turtle width
@@ -399,7 +402,7 @@ class GameplaySys {
 
     let correctedX = turtle.x;
     let correctedY = turtle.y;
-    let isColliding = false;
+    let isTurtleColliding = false;
 
     for (const floor of this.floors) {
       const floorLeft = floor.x;
@@ -414,32 +417,40 @@ class GameplaySys {
         turtTop > floorBottom &&
         turtBottom < floorTop
       ) {
-        isColliding = true;
+        isTurtleColliding = true;
 
         // Calculate overlaps on all sides
         const overlapX = Math.min(turtTop - floorBottom, floorTop - turtBottom);
         const overlapY = Math.min(turtRight - floorLeft, floorRight - turtLeft);
 
         // Resolve the collision based on the largest overlap
-        if (overlapX > overlapY) {
-          // Horizontal collision
-          correctedX = turtRight < floorRight ? floorLeft - 5 : floorRight;
-          this.setTurtles(index, "direction", (dir) => -dir); // Reverse direction
-        } else {
-          // Vertical collision
-          correctedY = turtTop < floorTop ? floorBottom - 5 : floorTop;
-          this.setTurtles(index, "fall", 0); // Stop falling
+        this.setTurtles(index, "overlap", Math.max(overlapX, overlapY));
+
+        if (this.turtles[index].overlap === overlapX) {
+          if (turtRight < floorRight) {
+            correctedX = floorLeft - 5;
+          } else {
+            correctedX = floorRight;
+          }
+          if (overlapX > 0.05) {
+            this.setTurtles(index, "direction", (dir) => -dir);
+          }
+        } else if (this.turtles[index].overlap === overlapY) {
+          if (turtTop < floorTop) {
+            correctedY = floorBottom - 5;
+          } else {
+            correctedY = floorTop;
+            this.setTurtles(index, "fall", 0);
+          }
         }
       }
     }
 
     // Update turtle position if there was a collision
-    if (isColliding) {
+    if (isTurtleColliding) {
       this.setTurtles(index, "x", correctedX);
       this.setTurtles(index, "y", correctedY);
     }
-
-    return isColliding;
   }
 
   // Game loop to update position
@@ -483,39 +494,37 @@ class GameplaySys {
     //Turtles logic
 
     this.turtles.forEach((_, index) => {
-      if (!this.is3DMode()) {
-        // Update horizontal movement
-        this.setTurtles(
-          index,
-          "x",
-          (x) => x + this.turtleSpeed * this.turtles[index].direction
-        );
+      // Update horizontal movement
+      this.setTurtles(
+        index,
+        "x",
+        (x) => x + this.turtleSpeed * this.turtles[index].direction
+      );
 
-        // Reverse direction if turtle hits borders
-        if (this.turtles[index].x <= 0) {
-          this.setTurtles(index, "x", (x) => 0);
+      // Reverse direction if turtle hits borders
+      if (this.turtles[index].x <= 0) {
+        this.setTurtles(index, "x", (x) => 0);
 
-          this.setTurtles(index, "direction", (dir) => -dir);
-        }
+        this.setTurtles(index, "direction", (dir) => -dir);
+      }
 
-        if (this.turtles[index].x >= 145) {
-          this.setTurtles(index, "x", (x) => 145);
+      if (this.turtles[index].x >= 145) {
+        this.setTurtles(index, "x", (x) => 145);
 
-          this.setTurtles(index, "direction", (dir) => -dir);
-        }
+        this.setTurtles(index, "direction", (dir) => -dir);
+      }
 
-        // Apply vertical movement (falling)
-        this.setTurtles(index, "y", (y) => y + this.turtles[index].fall);
-        this.setTurtles(index, "fall", (fall) => fall - this.gravity); // Gravity effect
+      // Apply vertical movement (falling)
+      this.setTurtles(index, "y", (y) => y + this.turtles[index].fall);
+      this.setTurtles(index, "fall", (fall) => fall - this.gravity); // Gravity effect
 
-        // Check collision with floors
-        this.checkTurtleColliding(index);
+      // Check collision with floors
+      this.checkTurtleColliding(index);
 
-        // If no floor, reset to ground level
-        if (this.turtles[index].y <= 0) {
-          this.setTurtles(index, "y", 0);
-          this.setTurtles(index, "fall", 0);
-        }
+      // If no floor, reset to ground level
+      if (this.turtles[index].y <= 0) {
+        this.setTurtles(index, "y", 0);
+        this.setTurtles(index, "fall", 0);
       }
     });
 

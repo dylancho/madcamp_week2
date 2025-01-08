@@ -50,7 +50,6 @@ const NumMapLabelStyle = css({
     // other
 })
 
-
 const MainSection: Component = () => {
     return (
         <div class={MainSectionStyle}>
@@ -58,7 +57,7 @@ const MainSection: Component = () => {
             <MainMenuSection></MainMenuSection>
             <div class={NumMapLabelStyle}>전체 {dataSys.numMaps()}개</div>
             <div onclick={() => controlSys.setIsMapDialogOpen(true)}>
-                <MapDisplay height={64 + 75 + Size.space.edge} page="main"/>
+                <MapDisplay height={64 + 75 + Size.space.edge} page = "main" />
             </div>
             <MapDialog />
         </div>

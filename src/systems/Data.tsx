@@ -40,6 +40,9 @@ class DataSys {
   curCreatingAccount: accountType;
   setCurCreatingAccount: SetStoreFunction<accountType>;
 
+  searchQuery: Accessor<string>;
+  setSearchQuery: Setter<string>;
+
   curUser: userType;
   setCurUser: SetStoreFunction<userType>;
 
@@ -90,6 +93,7 @@ class DataSys {
       ([this.mapCreator, this.setMapCreator] = createSignal<string>("")),
       ([this.mapDate, this.setMapDate] = createSignal<string>("")),
       ([this.emailError, this.setEmailError] = createSignal<boolean>(false)),
+      ([this.searchQuery, this.setSearchQuery] = createSignal<string>("")),
       onMount(() => {
         const savedUser = localStorage.getItem("curUser");
         const initialUser: userType = savedUser
@@ -103,7 +107,7 @@ class DataSys {
               keys: ["keyRight", "keyLeft", "keyDown", "keyUp", "2", "3"],
               map: [],
             };
-            
+
         [this.curUser, this.setCurUser] = createStore<userType>(initialUser);
       });
     // Update localStorage whenever curState changes
@@ -147,7 +151,7 @@ class DataSys {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: this.curCreatingAccount.email }),
     }).then((res) => res.json());
-    
+
     if (foundUser != null) {
       console.log("email already exist! :", this.curCreatingAccount.email);
       this.setEmailError(true);
@@ -159,7 +163,9 @@ class DataSys {
       this.addUser()
         .then((res) => dataSys.setCurUser(res.user))
         .then(() => menuNavigatorSys.setCurState("LogedIn"))
-        .then(() => {window.location.href = links.localhost + "/"})
+        .then(() => {
+          window.location.href = links.localhost + "/";
+        });
     }
   };
 
@@ -237,7 +243,7 @@ class DataSys {
 
   getMapsByEmail = async (email: string) => {
     try {
-      const response = await fetch(links.serverAddress + "/maps/email",{
+      const response = await fetch(links.serverAddress + "/maps/email", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
