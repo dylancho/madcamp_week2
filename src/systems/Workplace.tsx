@@ -1,8 +1,9 @@
 import { Accessor, createEffect, createSignal, Setter } from "solid-js"
 import { Size } from "../property/Size";
+import { gameplaySys } from "./Gameplay";
 
 // 0: empty, 1: obstacle, 2: start, 3: end, -1: eraser
-export type elementType = 0 | 1 | 2 | 3 | -1 | 4 | 5;
+export type elementType = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 class WorkplaceSys {  
     showPlayPopup: Accessor<boolean>
@@ -33,7 +34,7 @@ class WorkplaceSys {
         const currentType = this.selectedType();
     
         // Handle eraser functionality
-        if (currentType === -1) {
+        if (currentType === 6) {
           newWorkingWorld[index] = 0; // Clear the cell
         } else {
           // Ensure only one start and end location
@@ -45,7 +46,8 @@ class WorkplaceSys {
           // Update the cell type
           newWorkingWorld[index] = currentType;
         }
-    
+        
+        gameplaySys.setIsSuccess(false);
         this.setIsSaveEnabled(false);
         this.setWorkingWorld(newWorkingWorld);
       };

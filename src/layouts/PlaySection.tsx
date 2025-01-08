@@ -6,6 +6,7 @@ import { workplaceSys } from "../systems/Workplace";
 import { Size } from "../property/Size";
 import { dataSys } from "../systems/Data";
 import { ClearDialog, Dialog } from "../components/Dialog";
+import { BlockImage } from "../components/MapElementButton";
 
 const PlayPageStyle = css({
   display: 'flex',
@@ -146,24 +147,35 @@ const PlaySection: Component<{isInPopup: boolean}> = ({isInPopup}) => {
         <div class={StageStyle}>
           {/* Obstacles */}
           <For each={gameplaySys.obstacles}>{(obs, _) => 
-            <div class={TileStyle(obs, "green")}></div>
+            <div class={TileStyle(obs, "green")}>
+              <BlockImage element={1}></BlockImage>
+            </div>
           }</For>
           {/* Floors */}
           <For each={gameplaySys.floors}>{(fls, _) => 
-            <div class={TileStyle(fls, "orange")}></div>
+            <div class={TileStyle(fls, "orange")}>
+              <BlockImage element={4}></BlockImage>
+            </div>
           }</For>
           {/* Turtles */}
           <For each={gameplaySys.turtles}>{(tts, _) => 
-            <div class={TileStyle(tts, "red")}></div>
+            <div class={TileStyle(tts, "red")}>
+              <BlockImage element={5}></BlockImage>
+            </div>
           }</For>
           {/* Empty */}
           <For each={gameplaySys.empty}>{(ept, _) => 
-            <div class={TileStyle(ept, "transparent")}></div>
+            <div class={TileStyle(ept, "transparent")}>
+            </div>
           }</For>
           {/* Endpoint */}
-          <div class={CharacterStyle(gameplaySys.endPos, "yellow")}></div>
+          <div class={CharacterStyle(gameplaySys.endPos, "yellow")}>
+            <BlockImage element={3}></BlockImage>
+          </div>
           {/* Character */}
-          <div class={CharacterStyle(gameplaySys.position, Color.main)}></div>
+          <div class={CharacterStyle(gameplaySys.position, Color.main)}>
+            <BlockImage element={2}></BlockImage>
+          </div>
         </div>
       </div>
 

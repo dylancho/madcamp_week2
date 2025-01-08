@@ -58,7 +58,7 @@ const WorkplaceMenuSection: Component = () => {
                 <MapElementButton element={4}>Floor</MapElementButton>
                 <MapElementButton element={1}>Obstacle</MapElementButton>
                 <MapElementButton element={5}>Turtle</MapElementButton>
-                <MapElementButton element={-1}>Eraser</MapElementButton>
+                <MapElementButton element={6}>Eraser</MapElementButton>
             </div>
             <div class={RightMenuStyle}>
                 <button class={ButtonStyle(Size.ui.mapTestButtonW)}

@@ -1,8 +1,9 @@
 import { css } from "@emotion/css";
-import { Component, createEffect, createSignal } from "solid-js";
+import { Component, createEffect, createSignal, Match, Switch } from "solid-js";
 import { workplaceSys } from "../systems/Workplace";
 import { Size } from "../property/Size";
 import { Color } from "../property/Color";
+import { BlockEnd, BlockEraser, BlockFloor, BlockObstacle, BlockStart, BlockTurtle } from "./Icons";
 
 const MapContainerStyle = css({
     // flex
@@ -59,13 +60,7 @@ const cellStyle = (cell: number) => { return css({
     // text
     fontSize: "1.5vh",
     // color
-    backgroundColor: 
-        cell === 1 ? "green" :
-        cell === 2 ? "#00ff00" :
-        cell === 3 ? "#ffff00" :
-        cell === 4 ? "#FFA500" :
-        cell === 5 ? "red" :
-        "#fff",
+    backgroundColor: 'white',
     // space
     // other
     cursor: "pointer",
@@ -80,7 +75,26 @@ const MapGrid: Component = () => {
                     {workplaceSys.workingWorld().map((cell, index) => (
                         <div class={cellStyle(cell)}
                             onClick={() => workplaceSys.handleCellClick(index)}>
-                            {cell === 2 ? "S" : cell === 3 ? "E" : cell === 5 ? "X" :""}
+                                <Switch>
+                                    <Match when={cell === 1}>
+                                        <BlockObstacle></BlockObstacle>
+                                    </Match>
+                                    <Match when={cell === 2}>
+                                        <BlockStart></BlockStart>
+                                    </Match>
+                                    <Match when={cell === 3}>
+                                        <BlockEnd></BlockEnd>
+                                    </Match>
+                                    <Match when={cell === 4}>
+                                        <BlockFloor></BlockFloor>
+                                    </Match>
+                                    <Match when={cell === 5}>
+                                        <BlockTurtle></BlockTurtle>
+                                    </Match>
+                                    <Match when={cell === 6}>
+                                        <BlockEraser></BlockEraser>
+                                    </Match>
+                                </Switch>
                         </div>
                     ))}
                 </div>

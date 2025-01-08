@@ -21,7 +21,6 @@ const MainMenuSection: Component = () => {
         <div class={MainMenuSectionStyle}>
             <div class={css({display: 'flex'})}>
                 <SearchTextbox message={"검색"}></SearchTextbox>
-                <SearchDrop></SearchDrop>
             </div>
             <Show when={menuNavigatorSys.curState() == "LogedIn"}>
                 <MakeProjectButton>프로젝트 만들기</MakeProjectButton>
