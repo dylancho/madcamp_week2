@@ -17,11 +17,15 @@ class WorkplaceSys {
     selectedType: Accessor<elementType>
     setSelectedType: Setter<elementType>
 
+    curMapName: Accessor<string>
+    setCurMapName: Setter<string>
+
     constructor() {
         ([this.showPlayPopup, this.setShowPlayPopup] = createSignal<boolean>(false)),
         ([this.isSaveEnabled, this.setIsSaveEnabled] = createSignal<boolean>(false)),
         ([this.workingWorld, this.setWorkingWorld] = createSignal<number[]>(Array(Size.world.col * Size.world.row).fill(0))),
-        ([this.selectedType, this.setSelectedType] = createSignal<elementType>(0))
+        ([this.selectedType, this.setSelectedType] = createSignal<elementType>(0)),
+        ([this.curMapName, this.setCurMapName] = createSignal<string>("이름없는 지도"))
     }
 
     handleCellClick = (index: number) => {

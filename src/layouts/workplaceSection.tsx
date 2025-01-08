@@ -26,12 +26,21 @@ const MainTitleStyle = css({
     // flex
     // position
     // scale
+    boxSizing: 'border-box',
+    width: '50%',
+    height: Size.ui.mapElementButtonH,
     // text
     fontSize: Size.font.login,
-    fontWeight: "bold",
     // color
     // space
+    padding: Size.space.s,
     // other
+    border: '1px solid transparent',
+    ":hover": {
+        boxSizing: 'border-box',
+        border: '1px solid',
+        borderRadius: Size.radius.m,
+    }
 })
 
 const TestScaleStyle = css({
@@ -46,7 +55,9 @@ const TestScaleStyle = css({
 const WorkplaceSection: Component = () => {
     return (
         <div class={WorkplaceSectionStyle}>
-            <div class={MainTitleStyle}>이름없는 지도</div>
+            <input class={MainTitleStyle}
+                   value={workplaceSys.curMapName()}
+                   oninput={(e) => workplaceSys.setCurMapName(e.currentTarget.value)}>이름없는 지도</input>
             <WorkplaceMenuSection />
             <MapGrid />
             <Dialog isOpen={workplaceSys.showPlayPopup}

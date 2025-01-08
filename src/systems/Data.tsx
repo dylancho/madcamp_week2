@@ -9,6 +9,7 @@ import {
 import { links } from "../property/Link";
 import { createStore, SetStoreFunction } from "solid-js/store";
 import { menuNavigatorSys } from "./MenuNavigator";
+import { workplaceSys } from "./Workplace";
 
 export interface accountType {
   email: string;
@@ -265,7 +266,7 @@ class DataSys {
 
   postGrid = async (grid: number[]) => {
     const mapData = {
-      name: "제목없는 지도", // Replace with the logged-in user's name
+      name: workplaceSys.curMapName(),
       creatorEmail: this.curUser.email, // Replace with the logged-in user's unique ID
       config: grid, // The current grid data
     };
