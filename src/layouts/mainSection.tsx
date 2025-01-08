@@ -6,7 +6,7 @@ import { dataSys } from "../systems/Data";
 import { Color } from "../property/Color";
 import { MapDisplay } from "../components/MapDisplay";
 import { MapDialog } from "../components/Dialog";
-import { controlSys } from "../systems/Control";
+import { dialogSys } from "../systems/DialogControl";
 
 const MainSectionStyle = css({
     // flex
@@ -29,8 +29,9 @@ const MainTitleStyle = css({
     // scale
     // text
     fontSize: Size.font.main,
-    fontWeight: "bold",
+    fontWeight:"bold",
     // color
+    color: Color.main,
     // space
     // other
     ":hover": {
@@ -54,10 +55,10 @@ const NumMapLabelStyle = css({
 const MainSection: Component = () => {
     return (
         <div class={MainSectionStyle}>
-            <div class={MainTitleStyle}>메인 타이틀</div>
+            <div class={MainTitleStyle}>Nupzukis Free</div>
             <MainMenuSection></MainMenuSection>
             <div class={NumMapLabelStyle}>전체 {dataSys.numMaps()}개</div>
-            <div onclick={() => controlSys.setIsMapDialogOpen(true)}>
+            <div onclick={() => dialogSys.setIsMapDialogOpen(true)}>
                 <MapDisplay height={64 + 75 + Size.space.edge} page="main"/>
             </div>
             <MapDialog />

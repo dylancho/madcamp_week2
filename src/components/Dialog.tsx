@@ -1,11 +1,15 @@
 import { css } from "@emotion/css";
 import { Accessor, Component, JSXElement, onCleanup, Setter, Show, createSignal, createResource, } from "solid-js";
 import { Size } from "../property/Size";
-import { controlSys } from "../systems/Control";
+import { dialogSys } from "../systems/DialogControl";
 import KeySetGrid from "./KeySet";
 import { dataSys } from "../systems/Data";
 import MapInfoSection from "../layouts/mapInfoSection";
 import { OverlayStyle } from "../property/commonStyles";
+import { gameplaySys } from "../systems/Gameplay";
+import { Color } from "../property/Color";
+import { IcLikeN, IcLikeY } from "./Icons";
+import { links } from "../property/Link";
 
 const DialogStyle = css({
   // flex
@@ -38,6 +42,64 @@ const DialogTitleStyle = css({
   marginBottom: Size.space.xl,
   // other
 });
+
+const ClearDialogTitleStyle = css({
+  // flex
+  alignSelf: 'center',
+  // text
+  fontSize: Size.font.main,
+  fontWeight: "bold",
+  // color
+  color: Color.main,
+  // space
+  marginBottom: Size.space.xl,
+  // other
+})
+
+const ClearDialogmessageStyle = css({
+  // flex
+  alignSelf: 'center',
+  // text
+  fontSize: Size.font.l,
+  fontWeight: "bold",
+  // color
+  color: 'black',
+  // space
+  // other
+})
+
+const ClearDialogLikeStyle = css({
+  // flex
+  alignSelf: 'center',
+  // text
+  fontSize: Size.font.l,
+  fontWeight: "bold",
+  // color
+  color: 'black',
+  // space
+  // other
+})
+
+const buttonStyle = css({
+  // flex
+  // position
+  // scale
+  // text
+  textDecoration: 'underline',
+  fontSize: Size.font.m,
+  fontColor: Color.gray,
+  // color
+  backgroundColor: 'transparent',
+  // space
+  marginTop: Size.space.l,
+  // other
+  border: 'none',
+  cursor: 'pointer',
+
+  ":hover": {
+      filter: 'brightness(1.12)',
+  }
+})
 
 export const Dialog: Component<{isOpen: Accessor<boolean>,
                          setIsOpen: Setter<boolean>,
@@ -72,8 +134,8 @@ export const Dialog: Component<{isOpen: Accessor<boolean>,
 
 export const MapDialog: Component = () => {
     return (
-        <Dialog isOpen={controlSys.isMapDialogOpen}
-                setIsOpen={controlSys.setIsMapDialogOpen}
+        <Dialog isOpen={dialogSys.isMapDialogOpen}
+                setIsOpen={dialogSys.setIsMapDialogOpen}
                 title="">
             <div class={DialogTitleStyle}>{dataSys.curMap.name}</div>
             <MapInfoSection />
@@ -84,8 +146,8 @@ export const MapDialog: Component = () => {
 export const HelpDialog: Component = () => {
   return (
     <Dialog
-      isOpen={controlSys.isHelpDialogOpen}
-      setIsOpen={controlSys.setIsHelpDialogOpen}
+      isOpen={dialogSys.isHelpDialogOpen}
+      setIsOpen={dialogSys.setIsHelpDialogOpen}
       title="환영합니다!"
     >
       <p>
@@ -124,8 +186,8 @@ export const SettingDialog: Component = () => {
 
   return (
     <Dialog
-      isOpen={controlSys.isSettingDialogOpen}
-      setIsOpen={controlSys.setIsSettingDialogOpen}
+      isOpen={dialogSys.isSettingDialogOpen}
+      setIsOpen={dialogSys.setIsSettingDialogOpen}
       title="키 설정"
     >
       <KeySetGrid keyBindings={keyBindings()} onKeyChange={handleKeysChange} />
@@ -133,16 +195,24 @@ export const SettingDialog: Component = () => {
   );
 };
 
-export const ClearDialog: Component<{
-  isOpen: Accessor<boolean>,
-  customStyle?: string,
-  children: JSXElement}> = ({isOpen, customStyle, children}) => {
-
+export const ClearDialog: Component = () => {
   return (
-    <Show when={isOpen()}>
+    <Show when={gameplaySys.isSuccess()}>
       <div class={OverlayStyle}>
-        <div class={`${DialogStyle} ${customStyle? customStyle: ""}`}>
-          {children}
+        <div class={`${DialogStyle} ${css({gap: Size.space.xl})}`}>
+          <div class={ClearDialogTitleStyle}>성공!</div>
+          <div class={ClearDialogmessageStyle}>마음에 들었다면 좋아요를 눌러주세요!</div>
+          <div class={ClearDialogLikeStyle}>
+            <Show when={dialogSys.isLike()} fallback={
+              <IcLikeN />
+            }>
+              <IcLikeY />
+            </Show>
+          </div>
+          <button class={buttonStyle}
+                  onClick={() => dataSys.increaseRating(dataSys.curMap.id)}>
+              메인으로 돌아가기
+          </button>
         </div>
       </div>
     </Show>

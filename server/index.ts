@@ -57,6 +57,26 @@ app.post("/map/id", async (req, res) => {
   }
 });
 
+app.patch("/map/rating", async (req, res) => {
+  try {
+    const { id, increment } = req.body;
+    const map = await prisma.map.update({
+      where: {
+        id: id,
+      },
+      data: {
+        rating: increment,
+      }
+    });
+    res
+      .status(201)
+      .json(map);
+  } catch (error) {
+    console.error("Error fetching maps:", error);
+    res.status(500).json({ error: "Failed to fetch maps" });
+  }
+});
+
 app.post("/maps/email", async (req, res) => {
   try {
     const { email } = req.body;

@@ -99,6 +99,7 @@ const PlaySection: Component<{isInPopup: boolean}> = ({isInPopup}) => {
     const id = query.get("id");
     if (id) {
       const curMap = await dataSys.getMapById(Number(id))
+      dataSys.setCurMap(curMap);
       gameplaySys.initialize(curMap.config);
     }
   })
@@ -170,9 +171,7 @@ const PlaySection: Component<{isInPopup: boolean}> = ({isInPopup}) => {
       </div>
     </div>
     <Show when={!isInPopup}>
-      <ClearDialog isOpen={gameplaySys.isSuccess}>
-        성공!
-      </ClearDialog>
+      <ClearDialog />
     </Show>
     </>
   );
