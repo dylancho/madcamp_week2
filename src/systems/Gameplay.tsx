@@ -453,6 +453,42 @@ class GameplaySys {
     }
   }
 
+  hasLineOfSight(start: Turt, end: twoDimScaleType): boolean{
+    const dx = end.x - start.x;
+    const dy = end.y - start.y;
+
+    const stepCount = Math.max(Math.abs(dx), Math.abs(dy));
+    const stepX = dx / stepCount;
+    const stepY = dy / stepCount;
+
+    let x = start.x;
+    let y = start.y;
+
+    for (let i = 0; i <= stepCount; i++) {
+      x += stepX;
+      y += stepY;
+
+      // Check for collisions with obstacles or floors
+      if (
+        this.obstacles.some((obs) => this.isTurtleColliding({ x, y, width: 1, height: 1 }, obs)) ||
+        this.floors.some((floor) => this.isTurtleColliding({ x, y, width: 1, height: 1 }, floor))
+      ) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  isTurtleColliding(rect1: { x: any; y: any; width: any; height: any; }, rect2: Rect) {
+    return (
+      rect1.x < rect2.x + rect2.width &&
+      rect1.x + rect1.width > rect2.x &&
+      rect1.y < rect2.y + rect2.height &&
+      rect1.y + rect1.height > rect2.y
+    );
+  }
+
   // Game loop to update position
   updatePosition = () => {
     this.setPosition("x", (x) => x + this.velocity.x); // Update horizontal position
@@ -492,39 +528,63 @@ class GameplaySys {
 
     /////////////////////////////////////////////////
     //Turtles logic
-
     this.turtles.forEach((_, index) => {
       // Update horizontal movement
-      this.setTurtles(
-        index,
-        "x",
-        (x) => x + this.turtleSpeed * this.turtles[index].direction
-      );
+      if (!this.is3DMode()) {
+        this.setTurtles(
+          index,
+          "x",
+          (x) => x + this.turtleSpeed * this.turtles[index].direction
+        );
 
-      // Reverse direction if turtle hits borders
-      if (this.turtles[index].x <= 0) {
-        this.setTurtles(index, "x", (x) => 0);
+        // Reverse direction if turtle hits borders
+        if (this.turtles[index].x <= 0) {
+          this.setTurtles(index, "x", (x) => 0);
 
-        this.setTurtles(index, "direction", (dir) => -dir);
-      }
+          this.setTurtles(index, "direction", (dir) => -dir);
+        }
 
-      if (this.turtles[index].x >= 145) {
-        this.setTurtles(index, "x", (x) => 145);
+        if (this.turtles[index].x >= 145) {
+          this.setTurtles(index, "x", (x) => 145);
 
-        this.setTurtles(index, "direction", (dir) => -dir);
-      }
+          this.setTurtles(index, "direction", (dir) => -dir);
+        }
 
-      // Apply vertical movement (falling)
-      this.setTurtles(index, "y", (y) => y + this.turtles[index].fall);
-      this.setTurtles(index, "fall", (fall) => fall - this.gravity); // Gravity effect
+        // Apply vertical movement (falling)
+        this.setTurtles(index, "y", (y) => y + this.turtles[index].fall);
+        this.setTurtles(index, "fall", (fall) => fall - this.gravity); // Gravity effect
 
-      // Check collision with floors
-      this.checkTurtleColliding(index);
+        // Check collision with floors
+        this.checkTurtleColliding(index);
 
-      // If no floor, reset to ground level
-      if (this.turtles[index].y <= 0) {
-        this.setTurtles(index, "y", 0);
-        this.setTurtles(index, "fall", 0);
+        // If no floor, reset to ground level
+        if (this.turtles[index].y <= 0) {
+          this.setTurtles(index, "y", 0);
+          this.setTurtles(index, "fall", 0);
+        }
+      } else {
+        const character = this.position;
+        const clearPath = this.hasLineOfSight(this.turtles[index], character);
+
+        if (clearPath) {
+          // Move towards the character
+          const dx = character.x - this.turtles[index].x;
+          const dy = character.y - this.turtles[index].y;
+
+          if (Math.abs(dx) > Math.abs(dy)) {
+            this.setTurtles(
+              index,
+              "x",
+              (this.turtles[index].x + Math.sign(dx) * this.turtleSpeed)
+            );
+          } else {
+            this.setTurtles(
+              index,
+              "y",
+              (this.turtles[index].y + Math.sign(dy) * this.turtleSpeed)
+            );
+          }
+        }
       }
     });
 
