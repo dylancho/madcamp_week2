@@ -1,10 +1,11 @@
-import { Component, onMount, onCleanup, createEffect, For, on, createResource } from "solid-js";
+import { Component, onMount, onCleanup, createEffect, For, on, createResource, Show } from "solid-js";
 import { gameplaySys, Rect, twoDimScaleType } from "../systems/Gameplay";
 import { css } from "@emotion/css";
 import { Color } from "../property/Color";
 import { workplaceSys } from "../systems/Workplace";
 import { Size } from "../property/Size";
 import { dataSys } from "../systems/Data";
+import { ClearDialog, Dialog } from "../components/Dialog";
 
 const PlayPageStyle = css({
   display: 'flex',
@@ -70,11 +71,14 @@ const PlaySection: Component<{isInPopup: boolean}> = ({isInPopup}) => {
   // termination
   createEffect(() => {
     if (gameplaySys.isSuccess()) {
-      gameplaySys.setIsSuccess(false);
 
       if(isInPopup){
         workplaceSys.setShowPlayPopup(false); // Close the popup
         workplaceSys.setIsSaveEnabled(true); // Enable the Save button
+      } else {
+        gameplaySys.setVelocity({x: 0, y: 0})
+        window.removeEventListener("keydown", gameplaySys.handleKeyDown);
+        window.removeEventListener("keyup", gameplaySys.handleKeyUp);
       }
     }
   });
@@ -95,11 +99,11 @@ const PlaySection: Component<{isInPopup: boolean}> = ({isInPopup}) => {
     const id = query.get("id");
     if (id) {
       const curMap = await dataSys.getMapById(Number(id))
-      console.log(dataSys.curMap.config)
       gameplaySys.initialize(curMap.config);
     }
   })
 
+  // flexable resizing
   createEffect(() => {
     if (!playPageRef) return;
 
@@ -134,6 +138,7 @@ const PlaySection: Component<{isInPopup: boolean}> = ({isInPopup}) => {
   });
 
   return (
+    <>
     <div class={PlayPageStyle} ref={playPageRef}>
       {/* Game Area */}
       <div class={StageWrapperStyle}>
@@ -164,6 +169,12 @@ const PlaySection: Component<{isInPopup: boolean}> = ({isInPopup}) => {
         {"You died " + gameplaySys.deathCnt() + " times"}
       </div>
     </div>
+    <Show when={!isInPopup}>
+      <ClearDialog isOpen={gameplaySys.isSuccess}>
+        성공!
+      </ClearDialog>
+    </Show>
+    </>
   );
 };
 

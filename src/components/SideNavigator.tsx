@@ -1,11 +1,12 @@
 import { css } from "@emotion/css";
-import { Component, For } from "solid-js";
+import { Component, For, onMount } from "solid-js";
 import { Size } from "../property/Size";
 import { Color } from "../property/Color";
 import MenuIcon from "./MenuIcon";
 import { menuNavigatorSys, menuType, stateType } from "../systems/MenuNavigator";
 import { links } from "../property/Link";
 import { Dialog, HelpDialog, MapDialog, SettingDialog } from "../components/Dialog";
+import { dataSys } from "../systems/Data";
 
 const SideNavigatorStyle = css({
     // flex
@@ -50,6 +51,16 @@ const menus: Record<stateType, menuType[]> = {
 }
 
 const SideNavigator: Component = () => {
+    onMount(() => {
+        const fetchUser = async() => {
+            const keySet = await dataSys.getUser(dataSys.curUser.email);
+            if (keySet){
+                dataSys.setCurUser('keys', keySet.keys);
+            }
+        }
+        fetchUser();
+        console.log('key load', dataSys.curUser);
+    })
 
     return (
         <>

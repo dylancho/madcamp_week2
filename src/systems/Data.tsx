@@ -71,7 +71,7 @@ class DataSys {
         name: "",
         passward: "",
         createdAt: new Date(),
-        keys: [],
+        keys: ["keyRight", "keyLeft", "keyDown", "keyUp", "2", "3"],
         map: [],
       })),
       ([this.curMap, this.setCurMap] = createStore<mapType>({

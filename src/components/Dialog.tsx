@@ -132,3 +132,19 @@ export const SettingDialog: Component = () => {
     </Dialog>
   );
 };
+
+export const ClearDialog: Component<{
+  isOpen: Accessor<boolean>,
+  customStyle?: string,
+  children: JSXElement}> = ({isOpen, customStyle, children}) => {
+
+  return (
+    <Show when={isOpen()}>
+      <div class={OverlayStyle}>
+        <div class={`${DialogStyle} ${customStyle? customStyle: ""}`}>
+          {children}
+        </div>
+      </div>
+    </Show>
+  )      
+}
