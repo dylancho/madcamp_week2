@@ -64,6 +64,7 @@ const cellStyle = (cell: number) => { return css({
         cell === 2 ? "#00ff00" :
         cell === 3 ? "#ffff00" :
         cell === 4 ? "#FFA500" :
+        cell === 5 ? "red" :
         "#fff",
     // space
     // other
@@ -72,7 +73,6 @@ const cellStyle = (cell: number) => { return css({
 })};
 
 const MapGrid: Component = () => {
-
     return (
         <div id="map-container" class={MapContainerStyle}>
             <div class={MapGridWrapperStyle}>
@@ -80,7 +80,7 @@ const MapGrid: Component = () => {
                     {workplaceSys.workingWorld().map((cell, index) => (
                         <div class={cellStyle(cell)}
                             onClick={() => workplaceSys.handleCellClick(index)}>
-                            {cell === 2 ? "S" : cell === 3 ? "E" : ""}
+                            {cell === 2 ? "S" : cell === 3 ? "E" : cell === 5 ? "X" :""}
                         </div>
                     ))}
                 </div>

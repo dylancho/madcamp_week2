@@ -106,8 +106,9 @@ const KeySetGrid: Component<KeySetGridProps> = () => {
         i === index ? { ...binding, keyValue: newKey } : binding
       )
     );
+
     const keyBindingsList = keyBindings().map((e: any) => e.keyValue);
-    dataSys.putKeys(dataSys.curUser.email, keyBindingsList)
+    dataSys.putKeys(dataSys.curUser.email, keyBindingsList);
   };
 
   return (

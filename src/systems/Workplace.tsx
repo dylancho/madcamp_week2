@@ -2,9 +2,9 @@ import { Accessor, createEffect, createSignal, Setter } from "solid-js"
 import { Size } from "../property/Size";
 
 // 0: empty, 1: obstacle, 2: start, 3: end, -1: eraser
-export type elementType = 0 | 1 | 2 | 3 | -1 | 4;
+export type elementType = 0 | 1 | 2 | 3 | -1 | 4 | 5;
 
-class WorkplaceSys {
+class WorkplaceSys {  
     showPlayPopup: Accessor<boolean>
     setShowPlayPopup: Setter<boolean>
 

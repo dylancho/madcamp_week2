@@ -57,6 +57,9 @@ class DataSys {
   mapDate: Accessor<string>;
   setMapDate: Setter<string>;
 
+  emailError: Accessor<boolean>;
+  setEmailError: Setter<boolean>;
+
   constructor() {
     ([this.curCreatingAccount, this.setCurCreatingAccount] =
       createStore<accountType>({
@@ -70,7 +73,7 @@ class DataSys {
         name: "",
         passward: "",
         createdAt: new Date(),
-        keys: [],
+        keys: ["keyRight", "keyLeft", "keyDown", "keyUp", "2", "3"],
         map: [],
       })),
       ([this.curMap, this.setCurMap] = createStore<mapType>({
@@ -85,7 +88,7 @@ class DataSys {
       ([this.numMyMaps, this.setNumMyMaps] = createSignal<number>(0)),
       ([this.mapCreator, this.setMapCreator] = createSignal<string>("")),
       ([this.mapDate, this.setMapDate] = createSignal<string>("")),
-
+      ([this.emailError, this.setEmailError] = createSignal<boolean>(false)),
       onMount(() => {
         const savedUser = localStorage.getItem("curUser");
         const initialUser: userType = savedUser
@@ -96,12 +99,11 @@ class DataSys {
               name: "",
               passward: "",
               createdAt: new Date(),
-              keys: [],
+              keys: ["keyRight", "keyLeft", "keyDown", "keyUp", "2", "3"],
               map: [],
             };
-
+            
         [this.curUser, this.setCurUser] = createStore<userType>(initialUser);
-
       });
     // Update localStorage whenever curState changes
     createEffect(() => {
@@ -158,8 +160,12 @@ class DataSys {
     console.log(foundUser);
     if (foundUser != null) {
       console.log("email already exist! :", this.curCreatingAccount.email);
-      window.location.href = links.localhost + "/signin";
+      this.setEmailError(true);
+      setTimeout(() => {
+        window.location.href = links.localhost + "/signin";
+      }, 1000); // Delay by 100 milliseconds
     } else {
+      this.setEmailError(false);
       this.addUser();
       menuNavigatorSys.setCurState("LogedIn");
       window.location.href = links.localhost + "/";
@@ -234,7 +240,7 @@ class DataSys {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       return await response.json(); // Parse the JSON response
     } catch (error) {
       console.error("Error updating keys:", error);
@@ -244,7 +250,7 @@ class DataSys {
 
   postGrid = async (grid: number[]) => {
     const mapData = {
-      name: this.curUser.name, // Replace with the logged-in user's name
+      name: this.curMap.name, // Replace with the logged-in user's name
       creatorEmail: this.curUser.email, // Replace with the logged-in user's unique ID
       config: grid, // The current grid data
     };

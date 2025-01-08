@@ -53,11 +53,11 @@ const WorkplaceMenuSection: Component = () => {
     return (
         <div class={toolbarStyle}>
             <div class={LeftMenuStyle}>
-                <MapElementButton element={0}>Empty</MapElementButton>
                 <MapElementButton element={1}>Obstacle</MapElementButton>
                 <MapElementButton element={2}>Start</MapElementButton>
                 <MapElementButton element={3}>End</MapElementButton>
                 <MapElementButton element={4}>Floor</MapElementButton>
+                <MapElementButton element={5}>Turtle</MapElementButton>
                 <MapElementButton element={-1}>Eraser</MapElementButton>
             </div>
             <div class={RightMenuStyle}>
