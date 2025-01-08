@@ -51,7 +51,6 @@ const NumMapLabelStyle = css({
     // other
 })
 
-
 const MainSection: Component = () => {
     return (
         <div class={MainSectionStyle}>

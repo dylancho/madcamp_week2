@@ -2,7 +2,7 @@ import { Component, onMount } from "solid-js";
 import { css } from "@emotion/css";
 import { AccountTextbox } from "../components/Textbox";
 import { dataSys } from "../systems/Data";
-import { ButtonStyle, LoginLabelStyle, LoginTitleStyle, ErrorGlowStyle } from "../property/commonStyles";
+import { ButtonStyle, LoginLabelStyle, LoginTitleStyle } from "../property/commonStyles";
 import { Size } from "../property/Size";
 
 const SigninPageStyle = css({

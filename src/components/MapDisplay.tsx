@@ -50,38 +50,51 @@ const MapCardStyle = css({
 const MapTitleStyle = css({
   // flex
   // position
-  position: 'absolute',
+  position: "absolute",
   top: Size.space.s,
   left: Size.space.s,
   // scale
   // text
-  fontWeight: 'lighter',
+  fontWeight: "lighter",
   fontSize: Size.font.l,
   textShadow: `3px 3px 7px ${Color.grayDark}`,
   // color
-  color: 'black',
+  color: "black",
   // space
   // other
-})
+});
 
-export const MapDisplay: Component<{ height: number, page: string }> = ({ height, page }) => {
+export const MapDisplay: Component<{ height: number; page: string }> = ({
+  height,
+  page,
+}) => {
   const [maps] = createResource(() =>
-    ((page === "main")? dataSys.getMaps() : dataSys.getMapsByEmail(dataSys.curUser.email))
-    .then((fetchedMaps) => fetchedMaps.map((map: mapType) => map))
+    (page === "main"
+      ? dataSys.getMaps()
+      : dataSys.getMapsByEmail(dataSys.curUser.email)
+    ).then((fetchedMaps) => fetchedMaps.map((map: mapType) => map))
   );
+
+  const filteredMaps = () =>
+    maps()?.filter((map: mapType) =>
+      map.name.toLowerCase().includes(dataSys.searchQuery().toLowerCase())
+    );
 
   return (
     <div class={MapDisplayStyle(height)}>
-      <For each={maps()}>{(map) => (
-          <div class={MapCardStyle}
-               onclick={() => {
-                dataSys.setCurMap('name', map.name)
-                dataSys.setCurMap('id', map.id)
-                dataSys.setCurMap('createdAt', map.createdAt)
-                dataSys.setCurMap('creatorEmail', map.creatorEmail)
-                dataSys.setCurMap('rating', map.rating)
-                dataSys.setCurMap('config', map.config)
-               }}>
+      <For each={filteredMaps()}>
+        {(map) => (
+          <div
+            class={MapCardStyle}
+            onclick={() => {
+              dataSys.setCurMap("name", map.name);
+              dataSys.setCurMap("id", map.id);
+              dataSys.setCurMap("createdAt", map.createdAt);
+              dataSys.setCurMap("creatorEmail", map.creatorEmail);
+              dataSys.setCurMap("rating", map.rating);
+              dataSys.setCurMap("config", map.config);
+            }}
+          >
             <div class={MapGridStyle}>
               <div class={MapTitleStyle}>{map.name}</div>
               <For each={map.config}>
@@ -89,7 +102,8 @@ export const MapDisplay: Component<{ height: number, page: string }> = ({ height
               </For>
             </div>
           </div>
-       )}</For>
+        )}
+      </For>
     </div>
   );
 };
