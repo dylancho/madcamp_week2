@@ -59,6 +59,9 @@ class DataSys {
   mapDate: Accessor<string>;
   setMapDate: Setter<string>;
 
+  emailError: Accessor<boolean>;
+  setEmailError: Setter<boolean>;
+
   constructor() {
     ([this.curCreatingAccount, this.setCurCreatingAccount] =
       createStore<accountType>({
@@ -87,7 +90,7 @@ class DataSys {
       ([this.numMyMaps, this.setNumMyMaps] = createSignal<number>(0)),
       ([this.mapCreator, this.setMapCreator] = createSignal<string>("")),
       ([this.mapDate, this.setMapDate] = createSignal<string>("")),
-
+      ([this.emailError, this.setEmailError] = createSignal<boolean>(false)),
       onMount(() => {
         const savedUser = localStorage.getItem("curUser");
         const initialUser: userType = savedUser
@@ -98,10 +101,10 @@ class DataSys {
               name: "",
               passward: "",
               createdAt: new Date(),
-              keys: [],
+              keys: ["keyRight", "keyLeft", "keyDown", "keyUp", "2", "3"],
               map: [],
             };
-        
+            
         [this.curUser, this.setCurUser] = createStore<userType>(initialUser);
       });
     // Update localStorage whenever curState changes
@@ -148,8 +151,12 @@ class DataSys {
     
     if (foundUser != null) {
       console.log("email already exist! :", this.curCreatingAccount.email);
-      window.location.href = links.localhost + "/signin";
+      this.setEmailError(true);
+      setTimeout(() => {
+        window.location.href = links.localhost + "/signin";
+      }, 1000); // Delay by 100 milliseconds
     } else {
+      this.setEmailError(false);
       this.addUser()
         .then((res) => dataSys.setCurUser(res.user))
         .then(() => menuNavigatorSys.setCurState("LogedIn"))

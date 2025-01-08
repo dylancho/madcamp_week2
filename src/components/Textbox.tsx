@@ -3,7 +3,7 @@ import { Component } from "solid-js";
 import { Color } from "../property/Color";
 import { Size } from "../property/Size";
 import { accountType, dataSys } from "../systems/Data";
-import { TextboxStyle } from "../property/commonStyles";
+import { TextboxStyle, ErrorGlowStyle } from "../property/commonStyles";
 
 const searchTextboxStyle = css({
     // flex
@@ -31,13 +31,18 @@ const inputStyle = css({
     }
 })
 
-export const AccountTextbox: Component<{message: string, field: keyof accountType}> = ({message, field}) => {
+export const AccountTextbox: Component<{
+    message: string;
+    field: keyof accountType;
+  }> = ({ message, field}) => {
     return (
-        <input class={TextboxStyle()}
-               placeholder={message}
-               oninput={(e) => dataSys.setCurCreatingAccount(field, e.currentTarget.value)}/>
-    )
-}
+      <input
+        class={`${TextboxStyle()} ${dataSys.emailError() ? ErrorGlowStyle : ""}`} // Add ErrorGlowStyle conditionally
+        placeholder={message}
+        oninput={(e) => dataSys.setCurCreatingAccount(field, e.currentTarget.value)}
+      />
+    );
+  };
 
 export const SearchTextbox: Component<{message: string}> = ({message}) => {
     return (

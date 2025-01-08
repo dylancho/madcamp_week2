@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { Component } from "solid-js";
+import { Component, createSignal } from "solid-js";
 import { Size } from "../property/Size";
 import WorkplaceMenuSection from "./workplaceMenuSection";
 import MapGrid from "../components/MapGrid";
@@ -8,19 +8,19 @@ import { Dialog } from "../components/Dialog";
 import PlaySection from "./PlaySection";
 
 const WorkplaceSectionStyle = css({
-    // flex
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'stretch',
-    flex: 1,
-    // position
-    // scale
-    // text
-    // color
-    // space
-    margin: Size.space.edge,
-    // other
-})
+  // flex
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "stretch",
+  flex: 1,
+  // position
+  // scale
+  // text
+  // color
+  // space
+  margin: Size.space.edge,
+  // other
+});
 
 const MainTitleStyle = css({
     // flex
@@ -44,13 +44,13 @@ const MainTitleStyle = css({
 })
 
 const TestScaleStyle = css({
-    alignItems: 'center',
-    justifyContent: 'center',
-    // scale
-    width: "90%",
-    height: "80%",
-    padding: Size.space.edge,
-})
+  alignItems: "center",
+  justifyContent: "center",
+  // scale
+  width: "90%",
+  height: "80%",
+  padding: Size.space.edge,
+});
 
 const WorkplaceSection: Component = () => {
     return (

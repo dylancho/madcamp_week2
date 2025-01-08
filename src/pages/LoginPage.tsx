@@ -83,10 +83,10 @@ const LoginPage: Component = () => {
             <p class={LabelStyle}>또는</p>
             
             <p class={LoginLabelStyle}>이메일</p>
-            <AccountTextbox message={"something@mail.com"} field="email"></AccountTextbox>
+            <AccountTextbox message={"something@mail.com"} field="email" error={dataSys.emailError()}></AccountTextbox>
             
             <p class={LoginLabelStyle}>비밀번호</p>
-            <AccountTextbox message={"비밀번호"} field="passward"></AccountTextbox>
+            <AccountTextbox message={"비밀번호"} field="passward" error={dataSys.emailError()}></AccountTextbox>
 
             <button class={`${ButtonStyle(Size.ui.LoginW)} ${css({marginTop: Size.space.xl})}`}
                     onClick={dataSys.getUserLogedin}>

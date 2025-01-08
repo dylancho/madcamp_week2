@@ -152,6 +152,10 @@ const PlaySection: Component<{isInPopup: boolean}> = ({isInPopup}) => {
           <For each={gameplaySys.floors}>{(fls, _) => 
             <div class={TileStyle(fls, "orange")}></div>
           }</For>
+          {/* Turtles */}
+          <For each={gameplaySys.turtles}>{(tts, _) => 
+            <div class={TileStyle(tts, "red")}></div>
+          }</For>
           {/* Empty */}
           <For each={gameplaySys.empty}>{(ept, _) => 
             <div class={TileStyle(ept, "transparent")}></div>
