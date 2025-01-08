@@ -5,7 +5,7 @@ import { Color } from "../property/Color";
 import MenuIcon from "./MenuIcon";
 import { menuNavigatorSys, menuType, stateType } from "../systems/MenuNavigator";
 import { links } from "../property/Link";
-import { Dialog, HelpDialog, MapDialog, SettingDialog } from "../components/Dialog";
+import { HelpDialog, MapDialog, SettingDialog } from "../components/Dialog";
 import { dataSys } from "../systems/Data";
 
 const SideNavigatorStyle = css({

@@ -101,6 +101,15 @@ const buttonStyle = css({
   }
 })
 
+const introduceStyle = css({
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  fontWeight: 'lighter',
+  fontSize: Size.font.s,
+  lineHeight: 1.5,
+})
+
 export const Dialog: Component<{isOpen: Accessor<boolean>,
                          setIsOpen: Setter<boolean>,
                          title: string,
@@ -148,17 +157,15 @@ export const HelpDialog: Component = () => {
     <Dialog
       isOpen={dialogSys.isHelpDialogOpen}
       setIsOpen={dialogSys.setIsHelpDialogOpen}
-      title="환영합니다!"
+      title="넙죽이의 실험실에 온 것을 환영합니다!"
     >
-      <p>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim
-        veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-        commodo consequat. Duis aute irure dolor in reprehenderit in voluptate
-        velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
-        occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-        mollit anim id est laborum..
-      </p>
+      <div class={introduceStyle}>
+        <p>넙죽이의 지도교수님이 특별한 장치를 만들었습니다. </p>
+        <p style="font-weight: bold">물론 장치가 안전한지 시험하는 것은 넙죽이의 몫이죠!</p>
+        <p>불쌍한 넙죽이는 피실험체가 되어, 여러가지 공간에서 퍼즐을 해결하는 실험을 완수해야 합니다.</p>
+        <p>여러분들이 직접 실험 설계해서 넙죽이의 칼퇴근을 도와주세요!</p>
+        <img src="/ic_banner.png" class={css({alignSelf: 'center', flex: 1})}></img>
+      </div>
     </Dialog>
   );
 };

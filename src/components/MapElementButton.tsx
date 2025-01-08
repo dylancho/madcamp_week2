@@ -3,6 +3,8 @@ import { Component, JSXElement } from "solid-js";
 import { elementType, workplaceSys } from "../systems/Workplace";
 import { Color } from "../property/Color";
 import { Size } from "../property/Size";
+import { BlockEnd, BlockFloor, BlockObstacle, BlockStart, BlockTurtle } from "./Icons";
+
 
 const MapElementButtonStyle = (isSelected: boolean) => { return css({
     // flex
