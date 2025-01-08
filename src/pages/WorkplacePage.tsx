@@ -1,7 +1,7 @@
 import { Component, createEffect, createSignal } from "solid-js";
 import { css } from "@emotion/css";
 import SideNavigator from "../components/SideNavigator";
-import PlayPage from "./PlayPage";
+import PlayPage from "../layouts/PlaySection";
 import WorkplaceSection from "../layouts/workplaceSection";
 
 const WorkplacePageStyle = css({

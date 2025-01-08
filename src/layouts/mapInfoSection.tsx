@@ -66,6 +66,10 @@ const MapInfoSection: Component = () => {
         dataSys.setMapDate(`${date.getFullYear()}년 ${date.getMonth()+1}월 ${date.getDate()}일`)
     })
 
+    createEffect(() => {
+        console.log(dataSys.curMap.id);
+    })
+
     return (
         <div class={MapInfoSectionStyle}>
             <div class={MapPreviewStyle}>
@@ -90,7 +94,7 @@ const MapInfoSection: Component = () => {
                         <span>{dataSys.curMap.rating}</span>
                     </div>
                 </div>
-                <PlayButton>플레이</PlayButton>
+                <PlayButton map={dataSys.curMap}>플레이</PlayButton>
             </div>
         </div>
     )

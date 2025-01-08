@@ -40,9 +40,26 @@ app.get("/maps", async (req, res) => {
   }
 });
 
+app.post("/map/id", async (req, res) => {
+  try {
+    const { id } = req.body;
+    const map = await prisma.map.findFirst({
+      where: {
+        id: id
+      }
+    });
+    res
+      .status(201)
+      .json(map);
+  } catch (error) {
+    console.error("Error fetching map:", error);
+    res.status(500).json({ error: "Failed to fetch map" });
+  }
+});
+
 app.post("/maps/email", async (req, res) => {
   try {
-    const { email }: accountType = req.body;
+    const { email } = req.body;
     const maps = await prisma.map.findMany({
       where: {
         creatorEmail: email

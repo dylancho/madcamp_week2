@@ -212,6 +212,23 @@ class DataSys {
     }
   };
 
+  getMapById = async (id: number) => {
+    try {
+      const response = await fetch(links.serverAddress + "/map/id", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    } catch (error) {
+      console.error("Error fetching maps:", error);
+      return [];
+    }
+  };
+
   getMapsByEmail = async (email: string) => {
     try {
       const response = await fetch(links.serverAddress + "/maps/email",{

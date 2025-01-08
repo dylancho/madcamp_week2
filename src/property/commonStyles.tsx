@@ -23,7 +23,7 @@ export const TextboxStyle = (wid: number | string = Size.ui.LoginW) => { return 
     boxShadow: "0 0 1px 1px rgba(0, 0, 0, 0.1)",
 })}
 
-export const ButtonStyle = (wid?: number | string) => { return css({
+export const ButtonStyle = (wid?: number | string, color?: string) => { return css({
     // flex
     // position
     // scale
@@ -35,7 +35,7 @@ export const ButtonStyle = (wid?: number | string) => { return css({
     fontWeight: 'bold',
     // color
     color: 'white',
-    backgroundColor: Color.main,
+    backgroundColor: color? color : Color.main,
     // space
     // other
     border: 'none',

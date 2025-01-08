@@ -37,6 +37,9 @@ class GameplaySys {
     floors: Rect[]
     setFloors: SetStoreFunction<Rect[]>
 
+    empty: Rect[]
+    setEmpty: SetStoreFunction<Rect[]>
+
     isSuccess: Accessor<boolean>
     setIsSuccess: Setter<boolean>
 
@@ -60,6 +63,7 @@ class GameplaySys {
         ([this.velocity, this.setVelocity] = createStore<twoDimScaleType>({x: 0, y: 0})),
         ([this.obstacles, this.setObstacles] = createStore<Rect[]>([])),
         ([this.floors, this.setFloors] = createStore<Rect[]>([])),
+        ([this.empty, this.setEmpty] = createStore<Rect[]>([])),
         ([this.isSuccess, this.setIsSuccess] = createSignal<boolean>(false)),
         ([this.isJumping, this.setIsJumping] = createSignal<boolean>(false)),
         ([this.is3DMode, this.setIs3DMode] = createSignal<boolean>(false)),
@@ -79,10 +83,58 @@ class GameplaySys {
   keys: string[] = []; // Store the user's custom key bindings
   keyMappings: Record<string, string> = {};
 
+  initialize = (world: number[]) => {
+      this.setWorld(world);
+      this.setObstacles([]);
+      this.setFloors([]);
+      this.setEmpty([]);
+      this.fetchUserKeys();
+
+      window.addEventListener("keydown", this.handleKeyDown);
+      window.addEventListener("keyup", this.handleKeyUp);
+
+      this.world.forEach((cell, index) => {
+        const col = index % Size.world.col;
+        const row = Math.floor(index / Size.world.col);
+
+        const posX = col * Size.world.block;
+        const posY = (Size.world.row - row - 1) * Size.world.block;
+        
+        const curPos: twoDimScaleType = {
+          x: posX,
+          y: posY,
+        }
+
+        const curRect: Rect = {
+          x: posX,
+          y: posY,
+          width: Size.world.block,
+          height: Size.world.block,
+        }
+        if (cell === 1) { // obstacle
+          this.setObstacles((prev) => [...prev, curRect])
+        } else if (cell === 2) { // start
+          this.setPosition(curPos);
+        } else if (cell === 3) { // end
+          this.setEndPos(curPos);
+        } else if (cell === 4) { // floor
+          this.setFloors((prev) => [...prev, curRect])
+        } else { // empty
+          this.setEmpty((prev) => [...prev, curRect])
+        }
+      });
+  
+      this.animationFrameId = requestAnimationFrame(this.updatePosition);
+  
+      return () => {
+        window.removeEventListener("keydown", this.handleKeyDown);
+        window.removeEventListener("keyup", this.handleKeyUp);
+      };
+  }
+
   fetchUserKeys = async () => {
     try {
       const user = await dataSys.getUser(dataSys.curUser.email); // Fetch the user
-      console.log('user', user);
       if (user?.keys && user.keys.length >= 6) {
         this.keys = user.keys; // Use the fetched keys
       } else {

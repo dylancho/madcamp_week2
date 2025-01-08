@@ -34,7 +34,7 @@ const KeySetLabelStyle = css({
   fontSize: Size.font.m,
   textShadow: `1px 1px 2px ${Color.grayLight}`,
   textAlign: "left",
-  lineHeight: 2,
+  lineHeight: 2.5,
 });
 
 const KeySetBoxStyle = css({
@@ -94,8 +94,8 @@ const KeySet: Component<{
 
 const KeySetGrid: Component<KeySetGridProps> = () => {
   const [keyBindings, setKeyBindings] = createSignal(
-    ["오른쪽", "왼쪽", "아래쪽", "위쪽", "2D", "3D"].map((label, index) => ({
-      label: dataSys.curUser.keys[index] || "A", // Use the predefined labels
+    ["오른쪽 이동", "왼쪽 이동", "아래쪽 이동", "위쪽 이동", "2D로 전환", "3D로 전환"].map((label, index) => ({
+      label, // Use the predefined labels
       keyValue: "A", // Default key value
     }))
   );

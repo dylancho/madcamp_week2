@@ -4,8 +4,8 @@ import { Size } from "../property/Size";
 import WorkplaceMenuSection from "./workplaceMenuSection";
 import MapGrid from "../components/MapGrid";
 import { workplaceSys } from "../systems/Workplace";
-import PlayPage from "../pages/PlayPage";
 import { Dialog } from "../components/Dialog";
+import PlaySection from "./PlaySection";
 
 const WorkplaceSectionStyle = css({
     // flex
@@ -64,9 +64,7 @@ const WorkplaceSection: Component = () => {
                     setIsOpen={workplaceSys.setShowPlayPopup}
                     title=""
                     customStyle={TestScaleStyle}>
-                <PlayPage
-                    closePopup={() => workplaceSys.setShowPlayPopup(false)}
-                    enableSave={() => workplaceSys.setIsSaveEnabled(true)} />
+                <PlaySection isInPopup={true} />
             </Dialog>
         </div>
     )
