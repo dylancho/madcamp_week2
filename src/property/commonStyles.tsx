@@ -21,11 +21,10 @@ export const TextboxStyle = (wid: number | string = Size.ui.LoginW) => {
     border: "solid 1px",
     borderColor: Color.gray,
     borderRadius: Size.radius.m,
-  });
-};
+    boxShadow: "0 0 1px 1px rgba(0, 0, 0, 0.1)",
+})}
 
-export const ButtonStyle = (wid?: number | string) => {
-  return css({
+export const ButtonStyle = (wid?: number | string, color?: string) => { return css({
     // flex
     // position
     // scale
@@ -36,18 +35,23 @@ export const ButtonStyle = (wid?: number | string) => {
     textAlign: "center",
     fontWeight: "bold",
     // color
-    color: "white",
-    backgroundColor: Color.main,
+    color: 'white',
+    backgroundColor: color? color : Color.main,
     // space
     // other
     border: "none",
     borderRadius: Size.radius.m,
-    cursor: "pointer",
+    cursor: 'pointer',
+    transition: "transform 0.2s ease-in-out",
     ":hover": {
-      filter: "brightness(1.12)",
+      filter: 'brightness(1.12)',
+      transform: "scale(1.01)",
     },
-  });
-};
+    ":active": {
+        transform: "scale(0.95)",
+    },
+    boxShadow: "0 0 4px 4px rgba(0, 0, 100, 0.1)",
+})}
 
 export const LoginTitleStyle = css({
   // flex
@@ -106,25 +110,11 @@ export const OverlayStyle = css({
 });
 
 export const MapGridStyle = css({
-  display: "grid",
-  gridTemplateColumns: `repeat(${Size.world.col}, 1fr)`,
-  gridTemplateRows: `repeat(${Size.world.row}, 1fr)`,
-  gap: "1px",
-  width: "100%",
-  height: "100%",
-  backgroundColor: Color.grayLight,
-});
-
-export const CellStyle = (cellType: number) => {
-  let bgColor = "#fff";
-  if (cellType === 1) bgColor = "green"; // Obstacle
-  else if (cellType === 2) bgColor = "#00ff00"; // Start
-  else if (cellType === 3) bgColor = "#ffff00"; // End
-  else if (cellType === 4) bgColor = "orange";
-  else if (cellType === 5) bgColor = "red";
-  return css({
-    backgroundColor: bgColor,
+    display: "grid",
+    gridTemplateColumns: `repeat(${Size.world.col}, 1fr)`,
+    gridTemplateRows: `repeat(${Size.world.row}, 1fr)`,
+    position: 'relative',
+    gap: "1px",
     width: "100%",
     height: "100%",
   });
-};

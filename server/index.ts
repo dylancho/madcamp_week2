@@ -29,17 +29,85 @@ app.get("/users", async (req, res) => {
 app.get("/maps", async (req, res) => {
   try {
     const maps = await prisma.map.findMany();
-    res.json(maps);
+    res
+      .status(201)
+      .json(maps);
+  } catch (error) {
+    console.error("Error fetching maps:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to fetch maps" });
+  }
+});
+
+app.post("/map/id", async (req, res) => {
+  try {
+    const { id } = req.body;
+    const map = await prisma.map.findFirst({
+      where: {
+        id: id
+      }
+    });
+    res
+      .status(201)
+      .json(map);
+  } catch (error) {
+    console.error("Error fetching map:", error);
+    res.status(500).json({ error: "Failed to fetch map" });
+  }
+});
+
+app.post("/maps/email", async (req, res) => {
+  try {
+    const { email } = req.body;
+    const maps = await prisma.map.findMany({
+      where: {
+        creatorEmail: email
+      }
+    });
+    res
+      .status(201)
+      .json(maps);
   } catch (error) {
     console.error("Error fetching maps:", error);
     res.status(500).json({ error: "Failed to fetch maps" });
   }
 });
 
+app.get("/maps/amount", async (req, res) => {
+  try {
+    const mapCount = await prisma.map.count();
+    res
+      .status(201)
+      .json({mapCount});
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "[Error] An error occurred while getting the map amount" });
+  }
+})
+
+app.post("/maps/amount/email", async (req, res) => {
+  try {
+    const { email }: accountType = req.body;
+    const mapCount = await prisma.map.count({
+      where: {
+        creatorEmail: email
+      }
+    });
+    res
+      .status(201)
+      .json({mapCount});
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "[Error] An error occurred while getting the map amount" });
+  }
+})
+
 app.post("/addUser", async (req, res) => {
   try {
     const { email, name, passward }: accountType = req.body;
-    console.log(email, name, passward);
     const newUser = await prisma.user.create({
       data: {
         email,
@@ -62,7 +130,6 @@ app.post("/addUser", async (req, res) => {
 app.put("/putKeys", async (req, res) => {
   try {
     const { email, keys } = req.body; // Extract email and keys from request body
-    console.log(email, keys);
     // Update the user's keys
     const updatedUser = await prisma.user.update({
       where: {

@@ -9,6 +9,7 @@ import {
 import { links } from "../property/Link";
 import { createStore, SetStoreFunction } from "solid-js/store";
 import { menuNavigatorSys } from "./MenuNavigator";
+import { workplaceSys } from "./Workplace";
 
 export interface accountType {
   email: string;
@@ -117,11 +118,12 @@ class DataSys {
   };
 
   addUser = async () => {
-    await fetch(links.serverAddress + "/addUser", {
+    const response = await fetch(links.serverAddress + "/addUser", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(this.curCreatingAccount),
     });
+    return response.json();
   };
 
   getUser = async (email: string) => {
@@ -131,18 +133,6 @@ class DataSys {
       body: JSON.stringify({ email }),
     });
     return response.json();
-  };
-
-  getUserList = () => {
-    const [users] = createResource(this.fetchUsers);
-
-    return (
-      <ul>
-        {users()?.map((user) => (
-          <li>{user.name}</li>
-        ))}
-      </ul>
-    );
   };
 
   // Signin function
@@ -157,7 +147,7 @@ class DataSys {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: this.curCreatingAccount.email }),
     }).then((res) => res.json());
-    console.log(foundUser);
+    
     if (foundUser != null) {
       console.log("email already exist! :", this.curCreatingAccount.email);
       this.setEmailError(true);
@@ -166,9 +156,10 @@ class DataSys {
       }, 1000); // Delay by 100 milliseconds
     } else {
       this.setEmailError(false);
-      this.addUser();
-      menuNavigatorSys.setCurState("LogedIn");
-      window.location.href = links.localhost + "/";
+      this.addUser()
+        .then((res) => dataSys.setCurUser(res.user))
+        .then(() => menuNavigatorSys.setCurState("LogedIn"))
+        .then(() => {window.location.href = links.localhost + "/"})
     }
   };
 
@@ -227,6 +218,54 @@ class DataSys {
     }
   };
 
+  getMapById = async (id: number) => {
+    try {
+      const response = await fetch(links.serverAddress + "/map/id", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    } catch (error) {
+      console.error("Error fetching maps:", error);
+      return [];
+    }
+  };
+
+  getMapsByEmail = async (email: string) => {
+    try {
+      const response = await fetch(links.serverAddress + "/maps/email",{
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      return response.json();
+    } catch (error) {
+      console.error("Error fetching maps:", error);
+      return [];
+    }
+  };
+
+  getMapsAmount = async () => {
+    const response = await fetch(links.serverAddress + "/maps/amount");
+    return response.json();
+  };
+
+  getMapsAmountByEmail = async (email: string) => {
+    const response = await fetch(links.serverAddress + "/maps/amount/email", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email }),
+    });
+    return response.json();
+  };
+
   putKeys = async (email: string, keys: string[]) => {
     try {
       const response = await fetch(links.serverAddress + "/putKeys", {
@@ -250,7 +289,7 @@ class DataSys {
 
   postGrid = async (grid: number[]) => {
     const mapData = {
-      name: this.curMap.name, // Replace with the logged-in user's name
+      name: workplaceSys.curMapName(),
       creatorEmail: this.curUser.email, // Replace with the logged-in user's unique ID
       config: grid, // The current grid data
     };
@@ -263,7 +302,6 @@ class DataSys {
         },
         body: JSON.stringify(mapData), // Properly stringify the mapData object
       });
-      console.log(JSON.stringify(mapData));
 
       if (!response.ok) {
         throw new Error("Failed to save map");

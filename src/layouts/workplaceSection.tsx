@@ -4,9 +4,12 @@ import { Size } from "../property/Size";
 import WorkplaceMenuSection from "./workplaceMenuSection";
 import MapGrid from "../components/MapGrid";
 import { workplaceSys } from "../systems/Workplace";
-import PlayPage from "../pages/PlayPage";
 import { Dialog } from "../components/Dialog";
+<<<<<<< HEAD
 import { dataSys } from "../systems/Data";
+=======
+import PlaySection from "./PlaySection";
+>>>>>>> 9b0ce34b69a58a377239cfdd58e976ee130390b2
 
 const WorkplaceSectionStyle = css({
   // flex
@@ -24,6 +27,7 @@ const WorkplaceSectionStyle = css({
 });
 
 const MainTitleStyle = css({
+<<<<<<< HEAD
   // flex
   // position
   // scale
@@ -34,6 +38,27 @@ const MainTitleStyle = css({
   // space
   // other
 });
+=======
+    // flex
+    // position
+    // scale
+    boxSizing: 'border-box',
+    width: '50%',
+    height: Size.ui.mapElementButtonH,
+    // text
+    fontSize: Size.font.login,
+    // color
+    // space
+    padding: Size.space.s,
+    // other
+    border: '1px solid transparent',
+    ":hover": {
+        boxSizing: 'border-box',
+        border: '1px solid',
+        borderRadius: Size.radius.m,
+    }
+})
+>>>>>>> 9b0ce34b69a58a377239cfdd58e976ee130390b2
 
 const TestScaleStyle = css({
   alignItems: "center",
@@ -45,6 +70,7 @@ const TestScaleStyle = css({
 });
 
 const WorkplaceSection: Component = () => {
+<<<<<<< HEAD
   const [mapName, setMapName] = createSignal(dataSys.curUser.name);
   const handleNameChange = (e: Event) => {
     const target = e.target as HTMLInputElement;
@@ -77,5 +103,23 @@ const WorkplaceSection: Component = () => {
     </div>
   );
 };
+=======
+    return (
+        <div class={WorkplaceSectionStyle}>
+            <input class={MainTitleStyle}
+                   value={workplaceSys.curMapName()}
+                   oninput={(e) => workplaceSys.setCurMapName(e.currentTarget.value)}>이름없는 지도</input>
+            <WorkplaceMenuSection />
+            <MapGrid />
+            <Dialog isOpen={workplaceSys.showPlayPopup}
+                    setIsOpen={workplaceSys.setShowPlayPopup}
+                    title=""
+                    customStyle={TestScaleStyle}>
+                <PlaySection isInPopup={true} />
+            </Dialog>
+        </div>
+    )
+}
+>>>>>>> 9b0ce34b69a58a377239cfdd58e976ee130390b2
 
 export default WorkplaceSection;

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { Component, onMount, onCleanup, createEffect, For, on } from "solid-js";
 import { gameplaySys, Rect, Turt, twoDimScaleType } from "../systems/Gameplay";
 import { css } from "@emotion/css";
@@ -208,17 +209,40 @@ const PlayPage: Component<{
           <div class={CharacterStyle(gameplaySys.endPos, "yellow")}></div>
           {/* Character */}
           <div class={CharacterStyle(gameplaySys.position, Color.main)}></div>
+=======
+import { Component, createEffect, onMount } from "solid-js";
+import { css } from "@emotion/css"
+import SideNavigator from "../components/SideNavigator";
+import { dataSys } from "../systems/Data";
+import PlaySection from "../layouts/PlaySection";
+
+const PlayPageStyle = css({
+    // flex
+    display: 'flex',
+    flexDirection: 'row',
+    // position
+    // scale
+    // text
+    // color
+    // space
+    // other
+})
+
+const PlayPage: Component = () => {
+    onMount(async () => {
+        await dataSys
+          .getMapsAmount()
+          .then((res) => dataSys.setNumMaps(res.mapCount));
+      });
+    createEffect(() => dataSys.getKakaoUserLogedIn())
+
+    return (
+        <div class={PlayPageStyle}>
+            <PlaySection isInPopup={false} />
+            <SideNavigator/>
+>>>>>>> 9b0ce34b69a58a377239cfdd58e976ee130390b2
         </div>
-      </div>
+    );
+}
 
-      {/* Mode Indicator */}
-      <div class={IndicatorStyle}>
-        Mode: {gameplaySys.is3DMode() ? "3D-like" : "2D"}
-        <br />
-        {"You died " + gameplaySys.deathCnt() + " times"}
-      </div>
-    </div>
-  );
-};
-
-export default PlayPage;
+export default PlayPage

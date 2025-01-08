@@ -1,4 +1,4 @@
-import { Component, createEffect } from "solid-js";
+import { Component, createEffect, onMount } from "solid-js";
 import { css } from "@emotion/css"
 import SideNavigator from "../components/SideNavigator";
 import MainSection from "../layouts/mainSection";
@@ -17,6 +17,11 @@ const MainPageStyle = css({
 })
 
 const MainPage: Component = () => {
+    onMount(async () => {
+        await dataSys
+          .getMapsAmount()
+          .then((res) => dataSys.setNumMaps(res.mapCount));
+      });
     createEffect(() => dataSys.getKakaoUserLogedIn())
 
     return (

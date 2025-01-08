@@ -1,5 +1,5 @@
 import { css } from "@emotion/css";
-import { Component } from "solid-js";
+import { Component, createEffect } from "solid-js";
 import { Size } from "../property/Size";
 import MainMenuSection from "./mainMenuSection";
 import { dataSys } from "../systems/Data";
@@ -36,22 +36,34 @@ const MyContentProfileImageStyle = css({
 })
 
 const MyContentProfileTitleStyle = css({
+    fontSize: Size.font.login,
+    fontWeight: 'bold',
+    color: 'black',
+})
+
+const MyContentProfileWrapperStyle = css({
     // flex
+    display: 'flex',
+    flexDirection: 'column',
     // position
     // scale
     // text
     textAlign: 'left',
-    fontSize: Size.font.login,
     // color
+    color: Color.grayDark,
     // space
+    gap: Size.space.s,
     // other
 })
 
 const MyContentProfileSection: Component = () => {
     return (
         <div class={MyContentProfileSectionStyle}>
-            <div class={MyContentProfileImageStyle}></div>
-            <div class={MyContentProfileTitleStyle}>{dataSys.curUser.name}</div>
+            <img src="/img_profile.svg" class={MyContentProfileImageStyle}></img>
+            <div class={MyContentProfileWrapperStyle}>
+                <div class={MyContentProfileTitleStyle}>{dataSys.curUser.name}</div>
+                <div>시작한 날짜 : {(new Date(dataSys.curUser.createdAt)).toLocaleDateString("ko-kR")}</div>
+            </div>
         </div>
     )
 }

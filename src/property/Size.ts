@@ -29,11 +29,11 @@
 
     ui: {
         mapElementButtonW: 60,
-        keySetBoxW: 72,
+        keySetBoxW: 96,
         dropW: 140,
         profileW: 160,
         mapTestButtonW: 160,
-        keySetW: 200,
+        keySetW: 220,
         makeProjectW: 270,
         searchW: 280,
         mapDisplayW: 360,

@@ -47,11 +47,27 @@ const MapCardStyle = css({
   boxShadow: "0 0 2px 2px rgba(0, 0, 0, 0.1)",
 });
 
-export const MapDisplay: Component<{ height: number }> = ({ height }) => {
+const MapTitleStyle = css({
+  // flex
+  // position
+  position: 'absolute',
+  top: Size.space.s,
+  left: Size.space.s,
+  // scale
+  // text
+  fontWeight: 'lighter',
+  fontSize: Size.font.l,
+  textShadow: `3px 3px 7px ${Color.grayDark}`,
+  // color
+  color: 'black',
+  // space
+  // other
+})
+
+export const MapDisplay: Component<{ height: number, page: string }> = ({ height, page }) => {
   const [maps] = createResource(() =>
-    dataSys
-      .getMaps()
-      .then((fetchedMaps) => fetchedMaps.map((map: mapType) => map))
+    ((page === "main")? dataSys.getMaps() : dataSys.getMapsByEmail(dataSys.curUser.email))
+    .then((fetchedMaps) => fetchedMaps.map((map: mapType) => map))
   );
 
   return (
@@ -67,6 +83,7 @@ export const MapDisplay: Component<{ height: number }> = ({ height }) => {
                 dataSys.setCurMap('config', map.config)
                }}>
             <div class={MapGridStyle}>
+              <div class={MapTitleStyle}>{map.name}</div>
               <For each={map.config}>
                 {(cell) => <div class={CellStyle(cell)}></div>}
               </For>

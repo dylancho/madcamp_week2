@@ -65,8 +65,7 @@ const WorkplaceMenuSection: Component = () => {
                         onClick={() => workplaceSys.setShowPlayPopup(true)}>
                     <IcRun />
                 </button>
-                <button class={`${ButtonStyle(Size.ui.mapTestButtonW)}
-                                ${css({backgroundColor: workplaceSys.isSaveEnabled()? Color.main : Color.grayDark})}`}
+                <button class={ButtonStyle(Size.ui.mapTestButtonW, (workplaceSys.isSaveEnabled())? Color.main : Color.grayDark)}
                         onClick={() => dataSys.postGrid(workplaceSys.workingWorld())}
                         disabled={!workplaceSys.isSaveEnabled()}>
                     <IcUpload />
