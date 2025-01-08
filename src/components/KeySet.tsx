@@ -31,10 +31,10 @@ const KeySetStyle = css({
 
 const KeySetLabelStyle = css({
   height: "100%",
-  fontSize: Size.font.l,
-  fontWeight: "bold",
+  fontSize: Size.font.m,
+  textShadow: `1px 1px 2px ${Color.grayLight}`,
   textAlign: "left",
-  lineHeight: 1.5,
+  lineHeight: 2,
 });
 
 const KeySetBoxStyle = css({
@@ -63,7 +63,7 @@ const KeySet: Component<{
   keyValue: string;
   onKeyChange: (newKey: string) => void;
 }> = (props) => {
-  const [capturing, setCapturing] = createSignal(false);
+  const [capturing, setCapturing] = createSignal<boolean>(false);
 
   const handleKeyDownOnce = (e: KeyboardEvent) => {
     e.preventDefault();
@@ -75,7 +75,7 @@ const KeySet: Component<{
 
   const startCapturing = () => {
     if (capturing()) return;
-    setCapturing(true);
+    setCapturing(!capturing());
     document.addEventListener("keydown", handleKeyDownOnce, { once: true });
   };
 
@@ -86,7 +86,7 @@ const KeySet: Component<{
         class={`${KeySetBoxStyle} ${capturing() ? CapturingStyle : ""}`}
         onClick={startCapturing}
       >
-        {capturing() ? "Press any key..." : props.keyValue}
+        {capturing() ? "true" : props.keyValue}
       </div>
     </div>
   );

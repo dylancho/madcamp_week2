@@ -29,7 +29,7 @@
 
     ui: {
         mapElementButtonW: 60,
-        keySetBoxW: 72,
+        keySetBoxW: 96,
         dropW: 140,
         profileW: 160,
         mapTestButtonW: 160,
